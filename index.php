@@ -2,7 +2,6 @@
 function check_memory_readiness(): string
 {
     $memory_limit = ini_get('memory_limit');
-    echo "$memory_limit<br>";
     $memory_limit_bytes = return_bytes($memory_limit);
     $memory_usage = memory_get_usage();
     $available_memory = $memory_limit_bytes - $memory_usage;
