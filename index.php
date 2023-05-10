@@ -7,7 +7,8 @@ function check_memory_readiness(int $memory_limit): string
         return 'Memory is ready';
     endif;
 
-    $memory_usage = return_bytes(memory_get_usage());
+    $memory_limit = return_bytes($memory_limit);
+    $memory_usage = memory_get_usage();
     $available_memory = $memory_limit - $memory_usage;
 
     // the threshold is 200MB
@@ -21,19 +22,12 @@ function check_memory_readiness(int $memory_limit): string
 // simple PHP variable size checker
 function get_variable_size(mixed $variable): array
 {
-    // Get memory usage before serialization
     $start_memory = memory_get_usage();
-
-    // Serialize variable to get its size
     $variable_size = strlen(serialize($variable));
-
-    // Get memory usage after serialization
     $end_memory = memory_get_usage();
 
-    // Calculate the difference in memory usage
     $size_in_memory = $end_memory - $start_memory;
 
-    // Return an array with the variable size and the memory used
     return array(
         'size' => $variable_size,
         'memory' => $size_in_memory,
@@ -79,7 +73,6 @@ function return_bytes(string $size): int
 }
 
 // test
-// echo "<pre>";
 $conf = getConfigurations();
 print_r($conf);
 
@@ -91,5 +84,3 @@ echo check_memory_readiness($memory_limit);
 echo "\n";
 
 print_r(get_variable_size($memory_limit));
-
-// echo "</pre>";
