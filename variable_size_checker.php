@@ -13,7 +13,7 @@
  * callable =
  * resource =
  *
- * @param mixed $variable
+ * @param mixed $var
  *   The variable to inspect.
  *
  * @return int
