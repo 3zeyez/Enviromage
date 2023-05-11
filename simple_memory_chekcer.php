@@ -1,10 +1,15 @@
 <?php
-function check_memory_readiness(): string
+require "utils.php";
+
+function check_memory_readiness(int $memory_limit): string
 {
-    $memory_limit = ini_get('memory_limit');
-    $memory_limit_bytes = return_bytes($memory_limit);
+    if ($memory_limit == -1): // there is no limit
+        return 'Memory is ready';
+    endif;
+
+    $memory_limit = return_bytes($memory_limit);
     $memory_usage = memory_get_usage();
-    $available_memory = $memory_limit_bytes - $memory_usage;
+    $available_memory = $memory_limit - $memory_usage;
 
     // the threshold is 200MB
     if ($available_memory < 1048576 * 200) { // 1048576 bytes = 1 MB
@@ -13,5 +18,3 @@ function check_memory_readiness(): string
         return 'Memory is ready';
     }
 }
-
-
