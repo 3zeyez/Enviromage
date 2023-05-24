@@ -1,0 +1,7 @@
+php_memory_readiness_checker.content:
+  path: "/php_memory"
+  defaults:
+    _controller: '\Drupal\php_memory_readiness_checker\Controller\phpController::content'
+    _title: "PHP Memory Readiness Checker Module"
+  requirements:
+    _permission: "access content"

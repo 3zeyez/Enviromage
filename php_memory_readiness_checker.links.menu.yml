@@ -1,0 +1,6 @@
+php_memroy_readiness_checker.admin:
+  title: "PHP Memory Readiness Checker module settings"
+  description: "example of how to make an admin settings page link"
+  parent: system.admin_config_development
+  route_name: php_memory_readiness_checker.content
+  weight: 100

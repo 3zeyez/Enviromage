@@ -1,0 +1,2 @@
+php_memory_readiness_checker:
+  response: "Ready or not?"
