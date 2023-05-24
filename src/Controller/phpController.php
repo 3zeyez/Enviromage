@@ -176,7 +176,6 @@ class phpController extends ControllerBase
           throw new InvalidArgumentException('All arguments must be of type string.');
       }
     }
-    
 
     $configurations = [
       'memory_limit' => ini_get('memory_limit'),
