@@ -29,7 +29,7 @@ class VarController extends ControllerBase {
    *
    * @return int The approximate size of the variable in bytes.
    */
-  static public function get_var_size(mixed $var): int
+  public function get_var_size(mixed $var): int
   {
     // As every variable in PHP is a zval, a zval takes automatically 128 bits (16 bytes) in memory.
     $size = 16;

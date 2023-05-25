@@ -22,7 +22,7 @@ class UtilsController extends ControllerBase {
    *
    * @return int The size in bytes as an integer.
    */
-  static public function return_bytes(string $size): int
+  private function return_bytes(string $size): int
   {
     $last = strtolower($size[strlen($size) - 1]);
     $size = (int) substr($size, 0, -1);
