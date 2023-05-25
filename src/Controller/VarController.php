@@ -4,12 +4,12 @@ declare(strict_types = 1);
 
 namespace Drupal\php_memory_readiness_checker\Controller;
 
-use Drupal\Core\Controller\BaseController;
+use Drupal\Core\Controller\ControllerBase;
 
 /**
  * Define a Variable size checker controller class
 */
-class VarController extends BaseController {
+class VarController extends ControllerBase {
 
   /**
    * Get the size of a variable in memory.

@@ -4,12 +4,12 @@ declare(strict_types = 1);
 
 namespace Drupal\php_memory_readiness_checker\Controller;
 
-use Drupal\Core\Controller\BaseController;
+use Drupal\Core\Controller\ControllerBase;
 
 /**
  * Defines a content controller class.
  */
-class ContentController extends BaseController {
+class ContentController extends ControllerBase {
 
   /**
    * Display the markup.

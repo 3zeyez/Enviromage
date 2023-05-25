@@ -4,13 +4,13 @@ declare(strict_types = 1);
 
 namespace Drupal\php_memory_readiness_checker\Controller;
 
-use Drupal\Core\Controller\BaseController;
+use Drupal\Core\Controller\ControllerBase;
 
 /**
  * Defines an environment configuration checker controller class.
  */
 
-class EnvController extends BaseController {
+class EnvController extends ControllerBase {
 
   /**
    * Retrieves environment configuration values.

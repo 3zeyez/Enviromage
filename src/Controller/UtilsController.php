@@ -4,12 +4,12 @@ declare(strict_types = 1);
 
 namespace Drupal\php_memory_readiness_checker\Controller;
 
-use Drupal\Core\Controller\BaseController;
+use Drupal\Core\Controller\ControllerBase;
 
 /**
  * Defines an utils controller class.
  */
-class UtilsController extends BaseController {
+class UtilsController extends ControllerBase {
 
   /**
    * Converts a human-readable size representation to bytes.
