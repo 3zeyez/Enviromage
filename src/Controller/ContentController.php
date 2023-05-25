@@ -18,11 +18,20 @@ class ContentController extends ControllerBase {
    *   Return markup array.
    */
   public function content() {
+    $markup = "<h2>Hi! I am working on it!</h2><br /></p>";
+
+    $memory_limit = EnvController::get_environment_configurations('memory_limit');
+
+    $fontSize25 = "font-size: 25px;";
+    if (PhpMemoryController::check_memory_readiness($memory_limit)) {
+      $markup .= "<p style='color: green; $fontSize25'>The memory limit is `$memory_limit`. There is enough memory to update.</p>";
+    } else {
+      $markup .= "<p style='color: red; $fontSize25'>The memory limit is `$memory_limit`. There is not enough memory to update.</p>";
+    }
+
     return [
         '#type' => 'markup',
-        '#markup' => $this->t("<h2>Hi! I am working on it!</h2>
-                              <br /> 
-                              <p>I am going to split this controller into multiple controllers.</p>"),
+        '#markup' => $this->t($markup),
     ];
   }
 }

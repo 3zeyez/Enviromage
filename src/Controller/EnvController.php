@@ -30,7 +30,7 @@ class EnvController extends ControllerBase {
    * @throws BadFunctionCallException When too many parameters are provided.
    * @throws InvalidArgumentException When any argument is not of type string.
    */
-  public function get_environment_configurations(string...$args): array | int | false {
+  static public function get_environment_configurations(string...$args): array | string | int | false {
     $num_args = count($args);
 
     if ($num_args > 6) {
@@ -46,10 +46,10 @@ class EnvController extends ControllerBase {
     $configurations = [
       'memory_limit' => ini_get('memory_limit'),
       'max_execution_time' => ini_get('max_execution_time'),
-      'realpath_cache_size' => return_bytes(ini_get('realpath_cache_size')),
+      'realpath_cache_size' => UtilsController::return_bytes(ini_get('realpath_cache_size')),
       'realpath_cache_ttl' => ini_get('realpath_cache_ttl'),
-      'upload_max_filesize' => return_bytes(ini_get('upload_max_filesize')),
-      'post_max_size' => return_bytes(ini_get('post_max_size')),
+      'upload_max_filesize' => UtilsController::return_bytes(ini_get('upload_max_filesize')),
+      'post_max_size' => UtilsController::return_bytes(ini_get('post_max_size')),
     ];
 
     if ($num_args === 1) {
