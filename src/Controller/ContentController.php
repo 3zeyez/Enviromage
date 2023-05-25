@@ -10,7 +10,7 @@ use Drupal\Core\Controller\BaseController;
  * Defines a content controller class.
  */
 class ContentController extends BaseController {
-  
+
   /**
    * Display the markup.
    *
@@ -20,7 +20,9 @@ class ContentController extends BaseController {
   public function content() {
     return [
         '#type' => 'markup',
-        '#markup' => $this->t("<h2>Hi! I am working on it!</h2><br> I am going to split this controller into multiple controllers."),
+        '#markup' => $this->t("<h2>Hi! I am working on it!</h2>
+                              <br /> 
+                              <p>I am going to split this controller into multiple controllers.</p>"),
     ];
   }
 }
