@@ -24,10 +24,10 @@ class PhpMemoryController extends ControllerBase
   public function content() {
     $markup = "<h2>Hi! I am working on it!</h2><br /></p>";
 
-    $memory_limit = get_environment_configurations('memory_limit');
+    $memory_limit = $this->get_environment_configurations('memory_limit');
 
     $fontSize25 = "font-size: 25px;";
-    if (check_memory_readiness($memory_limit)) {
+    if ($this->check_memory_readiness($memory_limit)) {
       $markup .= "<p style='color: green; $fontSize25'>The memory limit is `$memory_limit`. There is enough memory to update.</p>";
     } else {
       $markup .= "<p style='color: red; $fontSize25'>The memory limit is `$memory_limit`. There is not enough memory to update.</p>";
@@ -90,19 +90,21 @@ class PhpMemoryController extends ControllerBase
    * If the available memory is below the threshold of 200MB, an error message is returned.
    * Otherwise, it indicates that the memory is ready.
    *
-   * @param int $memory_limit The memory limit in bytes.
+   * @param string 
+   * @param int 
+   * $memory_limit The memory limit.
    *
    * @return string Returns a message indicating the memory readiness:
    *   - "Memory is ready" if the memory limit is -1 or the available memory is sufficient.
    *   - "Error: Not enough memory available" if the available memory is below the threshold.
    */
-  public function check_memory_readiness(int $memory_limit): string
+  public function check_memory_readiness(string | int $memory_limit): string
   {
     if ($memory_limit === -1) {
       return 'Memory is ready';
     }
 
-    $memory_limit = return_bytes($memory_limit);
+    $memory_limit = $this->return_bytes($memory_limit);
     $memory_usage = memory_get_usage();
     $available_memory = $memory_limit - $memory_usage;
 
@@ -179,7 +181,7 @@ class PhpMemoryController extends ControllerBase
    * @throws BadFunctionCallException When too many parameters are provided.
    * @throws InvalidArgumentException When any argument is not of type string.
    */
-  public function get_environment_configurations(string...$args): array | int | false
+  public function get_environment_configurations(string...$args): array | string | int | false
   {
     $num_args = count($args);
 
@@ -196,10 +198,10 @@ class PhpMemoryController extends ControllerBase
     $configurations = [
       'memory_limit' => ini_get('memory_limit'),
       'max_execution_time' => ini_get('max_execution_time'),
-      'realpath_cache_size' => return_bytes(ini_get('realpath_cache_size')),
+      'realpath_cache_size' => $this->return_bytes(ini_get('realpath_cache_size')),
       'realpath_cache_ttl' => ini_get('realpath_cache_ttl'),
-      'upload_max_filesize' => return_bytes(ini_get('upload_max_filesize')),
-      'post_max_size' => return_bytes(ini_get('post_max_size')),
+      'upload_max_filesize' => $this->return_bytes(ini_get('upload_max_filesize')),
+      'post_max_size' => $this->return_bytes(ini_get('post_max_size')),
     ];
 
     if ($num_args === 1) {
