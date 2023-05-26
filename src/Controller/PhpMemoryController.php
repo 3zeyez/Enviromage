@@ -124,7 +124,7 @@ class phpController extends ControllerBase
    * - float: 8 bytes in the heap
    * - string: Each character occupies 1 byte in the heap
    * - array: The size is calculated recursively for each key and value in the array
-   * - object: (To Do)
+   * - object: Loading...
    * - callable: (To Do)
    * - resource: (To Do)
    *
@@ -149,6 +149,12 @@ class phpController extends ControllerBase
       foreach ($var as $key => $value) {
         $size += get_var_size($key);
         $size += get_var_size($value);
+      }
+    } elseif ($var_type === 'object') {  
+      // Loading...
+      $object_vars = get_object_vars($var);
+      foreach ($object_vars as $object_var) {
+        $size += get_var_size($var->$object_var);
       }
     }
 
