@@ -13,7 +13,7 @@ use Drupal\Core\Controller\ControllerBase;
 /**
  * Defines phpController class.
  */
-class phpController extends ControllerBase
+class PhpMemoryController extends ControllerBase
 {
   /**
    * Display the markup.
