@@ -9,6 +9,10 @@ declare (strict_types = 1);
 namespace Drupal\php_memory_readiness_checker\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Asset\LibraryDiscoveryInterface;
+use Drupal\Core\Asset\AttachedAssetsInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 
 /**
  * Defines phpController class.
@@ -22,6 +26,7 @@ class PhpMemoryController extends ControllerBase
    *   Return markup array.
    */
   public function content() {
+    // $this->mymodule_page_attachments();
     $markup = "<h2>Hi! I am working on it!</h2><br /></p>";
 
     $memory_limit = $this->get_environment_configurations('memory_limit');
@@ -33,11 +38,22 @@ class PhpMemoryController extends ControllerBase
       $markup .= "<p style='color: red; $fontSize25'>The memory limit is `$memory_limit`. There is not enough memory to update.</p>";
     }
 
+    $markup .= "<button>Get Environmnet Configrations</button>";
+
     return [
         '#type' => 'markup',
         '#markup' => $this->t($markup),
     ];
   }
+
+  /**
+   * Implements hook_page_attachments().
+   */
+  function mymodule_page_attachments(array &$attachments) {
+    $attachments['#attached']['library'][] = 'php_memory_readiness_checker/my_js_&_css';
+    return $attachments;
+  }
+
 
   /**
    * Converts a human-readable size representation to bytes.

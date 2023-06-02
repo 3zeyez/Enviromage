@@ -2,5 +2,8 @@ name: PHP Memory Readiness Checker
 description: This is description
 package: Custom
 type: module
-version: 1.0
+version: '1.0'
 core_version_requirement: ">=8"
+libraries:
+  - php_memory_readiness_checker/css
+  - php_memory_readiness_checker/js
