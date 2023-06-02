@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpUnused */
+/** @noinspection PhpUndefinedFunctionInspection */
 /**
  * @file
  * Contains \Drupal\php_memory_readiness_checker\Controller\phpController.
@@ -8,9 +9,11 @@ declare (strict_types = 1);
 
 namespace Drupal\php_memory_readiness_checker\Controller;
 
+use BadFunctionCallException;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Asset\LibraryDiscoveryInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
+use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
@@ -25,7 +28,7 @@ class PhpMemoryController extends ControllerBase
    * @return array
    *   Return markup array.
    */
-  public function content() {
+  public function content(): array {
     // $this->mymodule_page_attachments();
     $markup = "<h2>Hi! I am working on it!</h2><br /></p>";
 
@@ -49,7 +52,7 @@ class PhpMemoryController extends ControllerBase
   /**
    * Implements hook_page_attachments().
    */
-  function mymodule_page_attachments(array &$attachments) {
+  function mymodule_page_attachments(array &$attachments): array {
     $attachments['#attached']['library'][] = 'php_memory_readiness_checker/my_js_&_css';
     return $attachments;
   }
@@ -106,8 +109,7 @@ class PhpMemoryController extends ControllerBase
    * If the available memory is below the threshold of 200MB, an error message is returned.
    * Otherwise, it indicates that the memory is ready.
    *
-   * @param string 
-   * @param int 
+   * @param string | int $memory_limit
    * $memory_limit The memory limit.
    *
    * @return string Returns a message indicating the memory readiness:
@@ -168,7 +170,7 @@ class PhpMemoryController extends ControllerBase
         $size += get_var_size($key);
         $size += get_var_size($value);
       }
-    } elseif ($var_type === 'object') {  
+    } elseif ($var_type === 'object') {
       // Loading...
       $object_vars = get_object_vars($var);
       foreach ($object_vars as $object_var) {
@@ -192,7 +194,7 @@ class PhpMemoryController extends ControllerBase
    *
    * @param string ...$args Environment configuration keys
    *
-   * @return array|int|false Returns an array containing configuration values if all arguments are provided correctly or if no arguments are provided. If some arguments are provided, it returns an array with the specified configurations. Returns an int if only one argument is provided. Returns false if there is a typo in any of the arguments.
+   * @return array | string | int | false Returns an array containing configuration values if all arguments are provided correctly or if no arguments are provided. If some arguments are provided, it returns an array with the specified configurations. Returns an int if only one argument is provided. Returns false if there is a typo in any of the arguments.
    *
    * @throws BadFunctionCallException When too many parameters are provided.
    * @throws InvalidArgumentException When any argument is not of type string.
