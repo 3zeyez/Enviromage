@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * This file shows that I could implement a hook
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_cron()
+ */
+function php_memory_readiness_checker_cron(): void {
+  Drupal::messenger()->addMessage(t("Hello from php_memory_readiness_checker cron hook"));
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function php_memory_readiness_checker_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
+//  \Drupal::messenger()->addMessage(t("form_id of this form is @id", ['@id' => $form_id]));
+  if ($form_id == 'node_article_edit_form') {
+    $form['actions']['submit']['#value'] = t("Save this awesome article!");
+  }
+}
