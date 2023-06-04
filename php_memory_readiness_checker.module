@@ -11,7 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
  * Implements hook_cron()
  */
 function php_memory_readiness_checker_cron(): void {
-  Drupal::messenger()->addMessage(t("Hello from php_memory_readiness_checker cron hook"));
+  \Drupal::messenger()->addMessage(t("Hello from php_memory_readiness_checker cron hook"));
 }
 
 /**
