@@ -32,7 +32,7 @@ class PhpMemoryController extends ControllerBase
     // $this->mymodule_page_attachments();
     $markup = "<h2>Hi! I am working on it!</h2><br /></p>";
 
-    $memory_limit = $this->get_environment_configurations('memory_limit');
+    $memory_limit = $this->get_environment_configuration('memory_limit');
 
     $fontSize25 = "font-size: 25px;";
     if ($this->check_memory_readiness($memory_limit)) {
@@ -43,9 +43,14 @@ class PhpMemoryController extends ControllerBase
 
     $markup .= "<button>Get Environmnet Configrations</button>";
 
+//    return [
+//        '#type' => 'markup',
+//        '#markup' => $this->t($markup),
+//    ];
     return [
-        '#type' => 'markup',
-        '#markup' => $this->t($markup),
+      '#theme' => 'php_memory_readiness_checker',
+      '#environment_configuration' => $this->get_environment_configuration(),
+//      '#environment_configuration' => ,
     ];
   }
 
@@ -199,7 +204,7 @@ class PhpMemoryController extends ControllerBase
    * @throws BadFunctionCallException When too many parameters are provided.
    * @throws InvalidArgumentException When any argument is not of type string.
    */
-  public function get_environment_configurations(string...$args): array | string | int | false
+  public function get_environment_configuration(string...$args): array | string | int | false
   {
     $num_args = count($args);
 

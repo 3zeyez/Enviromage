@@ -23,3 +23,37 @@ function php_memory_readiness_checker_form_alter(&$form, FormStateInterface $for
     $form['actions']['submit']['#value'] = t("Save this awesome article!");
   }
 }
+
+/**
+ * Implements hook_theme().
+ */
+function php_memory_readiness_checker_theme($existing, $type, $theme, $path) {
+  return [
+    'php_memory_readiness_checker' => [
+      'variables' => ['environment_configuration' => 'Default Value'],
+    ],
+  ];
+}
+
+///**
+// * Implements hook_preprocess_HOOK() for page templates.
+// */
+//function php_memory_readiness_checker_preprocess_page(&$variables) {
+//  // Retrieve environment configuration values.
+//  $memory_limit = ini_get('memory_limit');
+//  $max_execution_time = ini_get('max_execution_time');
+//  $realpath_cache_size = ini_get('realpath_cache_size');
+//  $realpath_cache_ttl = ini_get('realpath_cache_ttl');
+//  $upload_max_filesize = ini_get('upload_max_filesize');
+//  $post_max_size = ini_get('post_max_size');
+//
+//  // Pass the configuration values to the template.
+//  $variables['environment_configuration'] = [
+//    'memory_limit' => $memory_limit,
+//    'max_execution_time' => $max_execution_time,
+//    'realpath_cache_size' => $realpath_cache_size,
+//    'realpath_cache_ttl' => $realpath_cache_ttl,
+//    'upload_max_filesize' => $upload_max_filesize,
+//    'post_max_size' => $post_max_size,
+//  ];
+//}

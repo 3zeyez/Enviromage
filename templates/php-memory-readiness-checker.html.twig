@@ -1,0 +1,7 @@
+{# Display the environment configuration values using a hook theme function #}
+<p>Environment Configuration:</p>
+<ol>
+  {% for key, config in environment_configuration %}
+    <li>{{ key }}: {{ config }}</li>
+  {% endfor %}
+</ol>
