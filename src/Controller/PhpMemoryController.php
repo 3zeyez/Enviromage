@@ -195,9 +195,9 @@ class PhpMemoryController extends ControllerBase
 
     $configurations = [
       'memory_limit' => ini_get('memory_limit'),
-      'max_execution_time' => ini_get('max_execution_time'),
+      'max_execution_time' => ini_get('max_execution_time') . 's',
       'realpath_cache_size' => ini_get('realpath_cache_size'),
-      'realpath_cache_ttl' => ini_get('realpath_cache_ttl'),
+      'realpath_cache_ttl' => ini_get('realpath_cache_ttl'). 's',
       'upload_max_filesize' => ini_get('upload_max_filesize'),
       'post_max_size' => ini_get('post_max_size'),
     ];
