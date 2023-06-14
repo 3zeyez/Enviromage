@@ -58,15 +58,6 @@ class PhpMemoryController extends ControllerBase
   }
 
   /**
-   * Implements hook_page_attachments().
-   */
-  function mymodule_page_attachments(array &$attachments): array {
-    $attachments['#attached']['library'][] = 'php_memory_readiness_checker/my_js_&_css';
-    return $attachments;
-  }
-
-
-  /**
    * Converts a human-readable size representation to bytes.
    *
    * Accepts a string representing the size, such as "2M" for 2 megabytes.
