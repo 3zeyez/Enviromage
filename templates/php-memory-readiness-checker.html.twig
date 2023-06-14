@@ -1,4 +1,7 @@
 {# Display the environment configuration values using a hook theme function #}
+{#{% load static %}#}
+
+{#<link rel="stylesheet" href="{{ asset('css/php_memory_readiness_checker.css') }}">#}
 <p>Environment Configuration:</p>
 <ol>
   {% for key, config in environment_configuration %}
