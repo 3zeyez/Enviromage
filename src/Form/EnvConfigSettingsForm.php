@@ -33,18 +33,18 @@ class EnvConfigSettingsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $settings = [
-      'memory_limit',
-      'max_execution_time',
-      'realpath_cache_size',
-      'realpath_cache_ttl',
-      'upload_max_filesize',
-      'post_max_size',];
+      'memory_limit' => 'memory_limit',
+      'max_execution_time' => 'max_execution_time',
+      'realpath_cache_size' => 'realpath_cache_size',
+      'realpath_cache_ttl' => 'realpath_cache_ttl',
+      'upload_max_filesize' => 'upload_max_filesize',
+      'post_max_size' => 'post_max_size',];
 
     $config = $this->config('php_memory_readiness_checker.settings');
-    $form['environment_configuration'] = [
+    $form['env_conf'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Set the environment configurations to retrieve'),
-      '#default_value' => $config->get('settings'),
+      '#default_value' => $config->get('settings_list'),
       '#options' => $settings,
       '#description' => $this->t('You could choose which ones could effect
                       your site performance during an update.'),
@@ -57,11 +57,11 @@ class EnvConfigSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $selected_settings = array_filter($form_state->getValue('environment_configuration'));
-    sort($selected_settings);
+    $selected_settings = array_filter($form_state->getValue('env_conf'));
+//    sort($selected_settings);
 
     $this->config('php_memory_readiness_checker.settings')
-      ->set('settings', $selected_settings)
+      ->set('settings_list', $selected_settings)
       ->save();
 
     parent::submitForm($form, $form_state);

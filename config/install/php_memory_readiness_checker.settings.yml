@@ -1,7 +1,7 @@
-settings:
+settings_list:
   - memory_limit
-#  - max_execution_time
-#  - realpath_cache_size
-#  - realpath_cache_ttl
-#  - upload_max_filesize
-#  - post_max_size
+  - max_execution_time
+  - realpath_cache_size
+  - realpath_cache_ttl
+  - upload_max_filesize
+  - post_max_size
