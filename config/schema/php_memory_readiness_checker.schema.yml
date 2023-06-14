@@ -2,7 +2,7 @@ php_memory_readiness_checker.settings:
   type: config_object
   label: Environment Configuration List Content Type Settings
   mapping:
-    allowed_types:
+    settings:
       type: sequence
       label: Content types the RSVP Form can display on
       sequence:
