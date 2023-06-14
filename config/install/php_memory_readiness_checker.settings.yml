@@ -1,2 +1,7 @@
-php_memory_readiness_checker:
-  response: "Ready or not?"
+settings:
+  - memory_limit
+#  - max_execution_time
+#  - realpath_cache_size
+#  - realpath_cache_ttl
+#  - upload_max_filesize
+#  - post_max_size
