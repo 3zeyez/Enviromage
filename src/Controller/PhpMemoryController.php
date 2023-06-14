@@ -5,9 +5,12 @@
  * Contains \Drupal\php_memory_readiness_checker\Controller\phpController.
  */
 
+
 declare (strict_types = 1);
 
 namespace Drupal\php_memory_readiness_checker\Controller;
+
+//phpinfo();
 
 use BadFunctionCallException;
 use Drupal\Core\Controller\ControllerBase;
@@ -221,10 +224,10 @@ class PhpMemoryController extends ControllerBase
     $configurations = [
       'memory_limit' => ini_get('memory_limit'),
       'max_execution_time' => ini_get('max_execution_time'),
-      'realpath_cache_size' => $this->return_bytes(ini_get('realpath_cache_size')),
+      'realpath_cache_size' => ini_get('realpath_cache_size'),
       'realpath_cache_ttl' => ini_get('realpath_cache_ttl'),
-      'upload_max_filesize' => $this->return_bytes(ini_get('upload_max_filesize')),
-      'post_max_size' => $this->return_bytes(ini_get('post_max_size')),
+      'upload_max_filesize' => ini_get('upload_max_filesize'),
+      'post_max_size' => ini_get('post_max_size'),
     ];
 
     if ($num_args === 1) {

@@ -1,0 +1,4 @@
+administer env settings:
+  title: Administer Environment Configuration Settings
+  description: Access the administrative settings page.
+  restrict access: true

@@ -7,3 +7,4 @@ core_version_requirement: '>=8'
 libraries:
   - php_memory_readiness_checker/css
   - php_memory_readiness_checker/js
+configure: php_memory_readiness_checker.admin_settings
