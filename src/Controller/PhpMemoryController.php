@@ -32,28 +32,9 @@ class PhpMemoryController extends ControllerBase
    *   Return markup array.
    */
   public function content(): array {
-    // $this->mymodule_page_attachments();
-    $markup = "<h2>Hi! I am working on it!</h2><br /></p>";
-
-    $memory_limit = $this->get_environment_configuration('memory_limit');
-
-    $fontSize25 = "font-size: 25px;";
-    if ($this->check_memory_readiness($memory_limit)) {
-      $markup .= "<p style='color: green; $fontSize25'>The memory limit is `$memory_limit`. There is enough memory to update.</p>";
-    } else {
-      $markup .= "<p style='color: red; $fontSize25'>The memory limit is `$memory_limit`. There is not enough memory to update.</p>";
-    }
-
-    $markup .= "<button>Get Environmnet Configrations</button>";
-
-//    return [
-//        '#type' => 'markup',
-//        '#markup' => $this->t($markup),
-//    ];
     return [
       '#theme' => 'php_memory_readiness_checker',
       '#environment_configuration' => $this->get_environment_configuration(),
-//      '#environment_configuration' => ,
     ];
   }
 
