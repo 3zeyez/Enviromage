@@ -58,11 +58,17 @@ class EnvConfigSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $selected_settings = array_filter($form_state->getValue('env_conf'));
-//    sort($selected_settings);
 
-    $this->config('php_memory_readiness_checker.settings')
-      ->set('settings_list', $selected_settings)
-      ->save();
+    if (count($selected_settings) == 0) {
+      \Drupal::messenger()->addWarning(t("One item should be selected at least!
+      We will not make any changes."));
+    }
+
+    if (count($selected_settings) != 0) {
+      $this->config('php_memory_readiness_checker.settings')
+        ->set('settings_list', $selected_settings)
+        ->save();
+    }
 
     parent::submitForm($form, $form_state);
   }

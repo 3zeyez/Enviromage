@@ -162,9 +162,8 @@ class PhpMemoryController extends ControllerBase
   }
 
   /**
-   * Retrieves environment configuration values.
+   * Retrieves environment configuration values from API configuration file:
    *
-   * Accepts a maximum of 6 arguments of type string in any order:
    * 1. memory_limit
    * 2. max_execution_time
    * 3. realpath_cache_size
@@ -172,48 +171,17 @@ class PhpMemoryController extends ControllerBase
    * 5. upload_max_filesize
    * 6. post_max_size
    *
-   * @param string ...$args Environment configuration keys
    *
-   * @return array | string | int | false Returns an array containing configuration values if all arguments are provided correctly or if no arguments are provided. If some arguments are provided, it returns an array with the specified configurations. Returns an int if only one argument is provided. Returns false if there is a typo in any of the arguments.
-   *
-   * @throws BadFunctionCallException When too many parameters are provided.
-   * @throws InvalidArgumentException When any argument is not of type string.
+   * @return array Returns an array containing configuration values
    */
-  public function get_environment_configuration(string...$args): array | string | int | false
+  public function get_environment_configuration(): array
   {
-    $num_args = count($args);
+    $config = $this->config('php_memory_readiness_checker.settings');
+    $configurations = $config->get('settings_list');
 
-    if ($num_args > 6) {
-      throw new BadFunctionCallException("Too many parameters!");
+    foreach ($configurations as $key) {
+      $configurations[$key] = ini_get($key);
     }
-
-    foreach ($args as $arg) {
-      if (!is_string($arg)) {
-          throw new InvalidArgumentException('All arguments must be of type string.');
-      }
-    }
-
-    $configurations = [
-      'memory_limit' => ini_get('memory_limit'),
-      'max_execution_time' => ini_get('max_execution_time') . 's',
-      'realpath_cache_size' => ini_get('realpath_cache_size'),
-      'realpath_cache_ttl' => ini_get('realpath_cache_ttl'). 's',
-      'upload_max_filesize' => ini_get('upload_max_filesize'),
-      'post_max_size' => ini_get('post_max_size'),
-    ];
-
-    if ($num_args === 1) {
-      return $configurations[$args[0]];
-    } elseif ($num_args > 1) {
-      $filteredConfigurations = array_intersect_key($configurations, array_flip($args));
-
-      if (count($filteredConfigurations) !== $num_args) {
-        return false;
-      }
-
-      return $filteredConfigurations;
-    }
-
     return $configurations;
   }
 
