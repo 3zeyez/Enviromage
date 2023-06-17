@@ -2,6 +2,8 @@
 {#{% load static %}#}
 
 {#<link rel="stylesheet" href="{{ asset('css/php_memory_readiness_checker.css') }}">#}
+<p>Modules' Memory Size: {{ modules_size }} </p>
+
 <p>Environment Configuration:</p>
 <ol>
   {% for key, config in environment_configuration %}

@@ -30,7 +30,8 @@ function php_memory_readiness_checker_form_alter(&$form, FormStateInterface $for
 function php_memory_readiness_checker_theme($existing, $type, $theme, $path) {
   return [
     'php_memory_readiness_checker' => [
-      'variables' => ['environment_configuration' => 'Default Value'],
+      'variables' => ['environment_configuration' => 'Default Value',
+                      'modules_size' => '',],
     ],
   ];
 }

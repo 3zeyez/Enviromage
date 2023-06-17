@@ -31,16 +31,18 @@ class PhpMemoryController extends ControllerBase {
    *   Return markup array.
    */
   public function content(): array {
-    //    return [
-    //      '#theme' => 'php_memory_readiness_checker',
-    //      '#environment_configuration' => $this->listModules(),
-    //    ];
+//    return [
+//      '#theme' => 'php_memory_readiness_checker',
+//      '#environment_configuration' => $this->get_environment_configuration(),
+//      '#modules_size' => $this->human_filesize($this->getModulesSize()),
+//    ];
     //    return [
     //      '#markup' => $this->t(implode(', ', $this->listModules())),
     //    ];
     echo $this->human_filesize($this->getModulesSize()) . "<br/>";
     echo "<pre>";
     //    print_r($this->listModules());
+    print_r($this->get_environment_configuration());
     echo "</pre>";
     return [];
   }
@@ -227,10 +229,16 @@ class PhpMemoryController extends ControllerBase {
     $config = $this->config('php_memory_readiness_checker.settings');
     $configurations = $config->get('settings_list');
 
-    foreach ($configurations as $key) {
-      $configurations[$key] = ini_get($key);
+    $retrieved_configurations = [];
+    echo "<pre>";
+    //    print_r($this->listModules());
+    print_r($configurations);
+    echo "</pre>";
+
+    foreach ($configurations as $index => $key) {
+      $retrieved_configurations[$key] = ini_get($key);
     }
-    return $configurations;
+    return $retrieved_configurations;
   }
 
   private function getModulesSize() {
