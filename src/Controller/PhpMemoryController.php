@@ -18,11 +18,13 @@ use Drupal\Core\Asset\LibraryDiscoveryInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Defines phpController class.
  */
 class PhpMemoryController extends ControllerBase {
+//  use VersionParsingTrait;
 
   /**
    * Display the markup.
@@ -31,20 +33,23 @@ class PhpMemoryController extends ControllerBase {
    *   Return markup array.
    */
   public function content(): array {
-//    return [
-//      '#theme' => 'php_memory_readiness_checker',
-//      '#environment_configuration' => $this->get_environment_configuration(),
-//      '#modules_size' => $this->human_filesize($this->getModulesSize()),
-//    ];
+    return [
+      '#theme' => 'php_memory_readiness_checker',
+      '#environment_configuration' => $this->get_environment_configuration(),
+      '#modules_size' => $this->human_filesize($this->getModulesSize()[0]['total_size']),
+      '#each_module' => $this->getModulesSize()[1],
+    ];
     //    return [
     //      '#markup' => $this->t(implode(', ', $this->listModules())),
     //    ];
-    echo $this->human_filesize($this->getModulesSize()) . "<br/>";
-    echo "<pre>";
-    //    print_r($this->listModules());
-    print_r($this->get_environment_configuration());
-    echo "</pre>";
-    return [];
+//    echo $this->human_filesize($this->getModulesSize()) . "<br/>";
+//    echo "<pre>";
+//    //    print_r($this->listModules());
+////    print_r($this->get_environment_configuration());
+//    print_r(\Drupal::service('module_handler')->getModule('automatic_updates'));
+//    echo "</pre>";
+//    $this->getModulesSize();
+//    return [];
   }
 
   /**
@@ -230,10 +235,10 @@ class PhpMemoryController extends ControllerBase {
     $configurations = $config->get('settings_list');
 
     $retrieved_configurations = [];
-    echo "<pre>";
-    //    print_r($this->listModules());
-    print_r($configurations);
-    echo "</pre>";
+//    echo "<pre>";
+//    //    print_r($this->listModules());
+//    print_r($configurations);
+//    echo "</pre>";
 
     foreach ($configurations as $index => $key) {
       $retrieved_configurations[$key] = ini_get($key);
@@ -246,11 +251,36 @@ class PhpMemoryController extends ControllerBase {
     //    return \Drupal::service('module_handler')->getModuleList();
     $list_of_modules = \Drupal::service('module_handler')
       ->getModuleDirectories();
-    $total_size = 0;
+    $array = [0 => ['total_size' => 0],
+              1 => []];
     foreach ($list_of_modules as $module_name => $path) {
-      $total_size += $this->getDirectorySize($path);
+//      if ($this->is_module_has_update($module_name)) {
+        $module_name = \Drupal::service('module_handler')->getName($module_name);
+        $module_size = $this->getDirectorySize($path);
+        $array[1][$module_name] = $this->human_filesize($module_size);
+        $array[0]['total_size'] += $module_size;
+//          $files = \Drupal::service('file_system')->scanDirectory($path, '.*');
+//          echo "<pre>";
+//          print_r($files);
+//          echo "</pre>";
+
+//      }
     }
-    return $total_size;
+    return $array;
+  }
+
+  private function is_module_has_update(string $module): bool {
+    // Get the current version of the module.
+//    $current_version = \Drupal::service('module_handler')
+//      ->moduleExists($module) ? \Drupal::service('module_handler')
+//      ->getModuleInfoBykey($module)->version : FALSE;
+    $current_version = 0;
+    // Get the latest version of the module from the update feed.
+    $latest_version = \Drupal::service('update.fetcher')
+      ->fetchLatestVersion($module);
+
+    // Check if the current version is less than the latest version.
+    return $current_version < $latest_version;
   }
 
 }

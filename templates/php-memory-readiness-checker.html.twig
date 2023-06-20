@@ -2,9 +2,14 @@
 {#{% load static %}#}
 
 {#<link rel="stylesheet" href="{{ asset('css/php_memory_readiness_checker.css') }}">#}
-<p>Modules' Memory Size: {{ modules_size }} </p>
+<h3>Total Enabled Modules' Memory Size in Disk: {{ modules_size }} </h3>
+<ol>
+  {% for key, config in each_module %}
+    <li>{{ key }}: {{ config }}</li>
+  {% endfor %}
+</ol>
 
-<p>Environment Configuration:</p>
+<h3>Environment Configuration:</h3>
 <ol>
   {% for key, config in environment_configuration %}
     <li>{{ key }}: {{ config }}</li>
