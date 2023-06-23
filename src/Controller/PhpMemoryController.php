@@ -104,8 +104,6 @@ class PhpMemoryController extends ControllerBase {
       $units = ['Bi', 'KiB', 'MiB', 'GiB', 'TiB'];
     }
 
-
-
     for ($i = 0; $bytes >= $factor && $i < count($units) - 1; $i++) {
       $bytes /= $factor;
     }
