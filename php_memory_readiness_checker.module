@@ -36,3 +36,5 @@ function php_memory_readiness_checker_theme($existing, $type, $theme, $path) {
     ],
   ];
 }
+
+//function php_memory_readiness_checker_init()

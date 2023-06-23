@@ -98,11 +98,13 @@ class PhpMemoryController extends ControllerBase {
   private function human_filesize($bytes, $decimals = 2) {
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
       $factor = 1024;
+      $units = ['B', 'KB', 'MB', 'GB', 'TB'];
     } else {
       $factor = 1000;
+      $units = ['Bi', 'KiB', 'MiB', 'GiB', 'TiB'];
     }
 
-    $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+
 
     for ($i = 0; $bytes >= $factor && $i < count($units) - 1; $i++) {
       $bytes /= $factor;
