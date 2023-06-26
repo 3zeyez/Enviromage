@@ -37,4 +37,41 @@ function php_memory_readiness_checker_theme($existing, $type, $theme, $path) {
   ];
 }
 
-//function php_memory_readiness_checker_init()
+function print_array_recursive($array, $indent = '') {
+  foreach ($array as $key => $value) {
+    echo $indent . $key . ': ';
+    if (is_array($value)) {
+      print_array_recursive($value, $indent . '  ');
+    } else {
+      echo $value;
+    }
+    echo "</br>";
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter
+ */
+//function php_memory_readiness_checker_module_implements_alter(&$implementations, $hook) {
+////  echo "<pre>";
+////  $number_of_elements = count($implementations);
+////  echo "${number_of_elements} </br>";
+////  print_array_recursive($implementations);
+//  if (isset($implementations['automatic_updates'])) {
+//    echo '$implementations[\'automatic_updates\'] is setted.</br>';
+//    if (is_array($implementations['automatic_updates']))
+//      print_array_recursive($implementations['automatic_updates']);
+//    else
+//      echo $implementations['automatic_updates'];
+//  }
+////  echo "</pre>";
+//  \Drupal::messenger()->addMessage(t("\$hook == $hook"));
+//  if ($hook == 'hook_help') {
+//    // Add your custom module's implementation of the target module's hook
+//    $memory_peak_usage =  memory_get_peak_usage(true);
+//    \Drupal::messenger()->addMessage(t("The memory usage of $hook hook is @u",
+//      ['@u' => $memory_peak_usage]));
+////    array_unshift($implementations, 'php_memory_readiness_checker');
+////    $implementations['automatic_updates'] = function() use () {};
+//  }
+//}

@@ -283,4 +283,19 @@ class PhpMemoryController extends ControllerBase {
     return $current_version < $latest_version;
   }
 
+  private function get_update_info_about_enabled_modules() {
+    $command = 'cd .. && composer update --dry-run --profile';
+    $output = NULL;
+    $result_code = NULL;
+    $return_value = exec($command, $output, $result_code);
+
+    // Display the output.
+    echo gettype($return_value) . "</br>";  // check if exec is working fine or not
+    if ($return_value === '') echo '$return_value is empty string!</br>';
+    else echo $return_value . "</br>";
+
+    if ($result_code == 0) echo "Zero is returned, the command works fine.</br>";
+    else echo "$result_code</br>";
+    echo "<pre>"; print_r($output); echo "</pre>";
+  }
 }
