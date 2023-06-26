@@ -298,4 +298,42 @@ class PhpMemoryController extends ControllerBase {
     else echo "$result_code</br>";
     echo "<pre>"; print_r($output); echo "</pre>";
   }
+
+  // Your custom module code.
+  private function run_composer_command() {
+    // Run the shell command within the DDEV environment.
+    $descriptors = [
+      1 => ['pipe', 'w'], // Capture standard output
+      2 => ['pipe', 'w'], // Capture standard error output
+    ];
+    $process = proc_open('cd .. && composer update --dry-run --profile',
+      $descriptors, $pipes);
+
+    if (is_resource($process)) {
+      // Get the standard output
+      $output = stream_get_contents($pipes[1]);
+
+      // Get the standard error output
+      $errorOutput = stream_get_contents($pipes[2]);
+
+      // Close the pipes
+      fclose($pipes[1]);
+      fclose($pipes[2]);
+
+      // Close the process
+      proc_close($process);
+
+      // Display the output.
+      echo "<pre>$output</pre></br>Hi! I am Aziz.";
+      echo "<pre>$output</pre></br>Hi! I am Aziz.";
+      echo "<pre>$output</pre></br>Hi! I am Aziz.";
+      echo "<pre>$output</pre></br>Hi! I am Aziz.";
+      echo "<pre>$output</pre></br>Hi! I am Aziz.";
+      echo "<pre>$output</pre></br>Hi! I am Aziz.";
+      echo "<pre>$output</pre></br>Hi! I am Aziz.";
+
+      // Display the error output.
+      echo "<pre>Error Output: $errorOutput</pre>";
+    }
+  }
 }
