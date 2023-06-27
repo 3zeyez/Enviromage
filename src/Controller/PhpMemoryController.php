@@ -400,7 +400,7 @@ class PhpMemoryController extends ControllerBase {
         // Lock file operations:
         $beginOfLine = substr($restOfLine1, 0, strlen('Lock file operations:'));
         if ($beginOfLine === 'Lock file operations:') {
-          /** @TODO  duplicated code removal by creating a function for that*/
+          $this->retrieve_IUR('Lock file operations:', $restOfLine1, $beginOfLine);
         }
 
         unset($beginOfLine); // end of Lock file operations
@@ -408,26 +408,7 @@ class PhpMemoryController extends ControllerBase {
         // Package operations:
         $beginOfLine = substr($restOfLine1, 0, strlen('Package operations:'));
         if ($beginOfLine === 'Package operations:') {
-          echo "Package operations:";
-          echo "</br>";
-
-          // Installs
-          $restOfLine2 = trim(substr($restOfLine1, strlen($beginOfLine)));
-          $numberOfInstalls = (int) $restOfLine2;
-          echo "We have $numberOfInstalls Installs.";
-          echo "</br>";
-
-          // Updates
-          $restOfLine2 = substr($restOfLine2, strlen('0 installs,'));
-          $numberOfUpdates = (int) $restOfLine2;
-          echo "We have $numberOfUpdates Updates.";
-          echo "</br>";
-
-          // Removes
-          $restOfLine2 = substr($restOfLine2, strlen('10 updates,'));
-          $numberOfRemoves = (int) $restOfLine2;
-          echo "We have $numberOfRemoves Removes.";
-          echo "</br>";
+          $this->retrieve_IUR('Package operations:', $restOfLine1, $beginOfLine);
         }
       }
 
@@ -435,6 +416,29 @@ class PhpMemoryController extends ControllerBase {
       echo "Average memory usage equals to: $avg_memory_usage";
       echo "</br>";
     }
+  }
+
+  private function retrieve_IUR($label, $restOfLine1, $beginOfLine1) {
+    echo "$label";
+    echo "</br>";
+
+    // Installs
+    $restOfLine2 = trim(substr($restOfLine1, strlen($beginOfLine1)));
+    $numberOfInstalls = (int) $restOfLine2;
+    echo "We have $numberOfInstalls Installs.";
+    echo "</br>";
+
+    // Updates
+    $restOfLine2 = substr($restOfLine2, strlen('0 installs,'));
+    $numberOfUpdates = (int) $restOfLine2;
+    echo "We have $numberOfUpdates Updates.";
+    echo "</br>";
+
+    // Removes
+    $restOfLine2 = substr($restOfLine2, strlen('10 updates,'));
+    $numberOfRemoves = (int) $restOfLine2;
+    echo "We have $numberOfRemoves Removes.";
+    echo "</br>";
   }
 
   // Your custom module code.
