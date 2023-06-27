@@ -400,26 +400,7 @@ class PhpMemoryController extends ControllerBase {
         // Lock file operations:
         $beginOfLine = substr($restOfLine1, 0, strlen('Lock file operations:'));
         if ($beginOfLine === 'Lock file operations:') {
-          echo "Lock file operations:";
-          echo "</br>";
-
-          // Installs
-          $restOfLine2 = trim(substr($restOfLine1, strlen($beginOfLine)));
-          $numberOfInstalls = (int) $restOfLine2;
-          echo "We have $numberOfInstalls Installs.";
-          echo "</br>";
-
-          // Updates
-          $restOfLine2 = substr($restOfLine2, strlen('0 installs,'));
-          $numberOfUpdates = (int) $restOfLine2;
-          echo "We have $numberOfUpdates Updates.";
-          echo "</br>";
-
-          // Removes
-          $restOfLine2 = substr($restOfLine2, strlen('10 updates,'));
-          $numberOfRemoves = (int) $restOfLine2;
-          echo "We have $numberOfRemoves Removes.";
-          echo "</br>";
+          /** @TODO  duplicated code removal by creating a function for that*/
         }
 
         unset($beginOfLine); // end of Lock file operations
