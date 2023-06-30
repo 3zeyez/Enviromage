@@ -388,6 +388,14 @@ class PhpMemoryController extends ControllerBase {
       echo "<pre>"; print_r($lines); echo "</pre>";
 
       $total_memory = 0.0;
+
+      $key = '';
+      $toBeInstalledLf = [];
+      $toBeUpdatedLf = [];
+      $toBeRemovedLf = [];
+      $toBeInstalledPk = [];
+      $toBeUpdatedPk = [];
+      $toBeRemovedPk = [];
       foreach ($lines as $line) {
         $closingBracketPos = strpos($line, ']');
         $substring = substr($line, 1, $closingBracketPos - 1);
@@ -401,20 +409,82 @@ class PhpMemoryController extends ControllerBase {
         $beginOfLine = substr($restOfLine1, 0, strlen('Lock file operations:'));
         if ($beginOfLine === 'Lock file operations:') {
           $this->retrieve_IUR('Lock file operations:', $restOfLine1, $beginOfLine);
+          $key = 'Lock file operations';
         }
-
         unset($beginOfLine); // end of Lock file operations
 
         // Package operations:
         $beginOfLine = substr($restOfLine1, 0, strlen('Package operations:'));
         if ($beginOfLine === 'Package operations:') {
           $this->retrieve_IUR('Package operations:', $restOfLine1, $beginOfLine);
+          $key = 'Package operations';
         }
+        unset($beginOfLine); // end of Package operations
+
+        // Files to be installed
+        $beginOfLine = substr($restOfLine1, 0, strlen('- Installing'));
+        if ($beginOfLine === '- Installing') {
+          $this->add_op_to_array(
+            $toBeInstalledLf,
+            $toBeInstalledPk,
+            $key,
+            $restOfLine1,
+            $beginOfLine
+          );
+        }
+        unset($beginOfLine); // end of Files to be installed
+
+        // Files to be updated
+        $beginOfLine = substr($restOfLine1, 0, strlen('- Upgrading'));
+        if ($beginOfLine === '- Upgrading') {
+          $this->add_op_to_array(
+            $toBeUpdatedLf,
+            $toBeUpdatedPk,
+            $key,
+            $restOfLine1,
+            $beginOfLine
+          );
+        }
+        unset($beginOfLine); // end of Files to be updated
+
+        // Files to be removed
+        $beginOfLine = substr($restOfLine1, 0, strlen('- Removing'));
+        if ($beginOfLine === '- Removing') {
+          $this->add_op_to_array(
+            $toBeRemovedLf,
+            $toBeRemovedPk,
+            $key,
+            $restOfLine1,
+            $beginOfLine
+          );
+        }
+        unset($beginOfLine); // end of Files to be removed
       }
 
       $avg_memory_usage = $total_memory / count($lines);
+      echo "Total Memory equals to: $total_memory";
+      echo "</br>";
       echo "Average memory usage equals to: $avg_memory_usage";
       echo "</br>";
+      echo "To be installed:";
+      echo "<pre>";
+      $toBeInstalledPk[] = 'aziz';
+      $toBeInstalledLf[] = 'aziz';
+      print_r($toBeInstalledLf);
+      print_r($toBeInstalledPk);
+      echo "</pre>";
+
+      echo "To be updated:";
+      echo "<pre>";
+      print_r($toBeUpdatedLf);
+      print_r($toBeUpdatedPk);
+      echo "</pre>";
+
+      echo "To be removed:";
+      echo "<pre>";
+      print_r($toBeRemovedLf);
+      print_r($toBeRemovedPk);
+      echo "</pre>";
     }
   }
 
@@ -465,8 +535,8 @@ class PhpMemoryController extends ControllerBase {
       // Close the process
       proc_close($process);
 
-      if ($output == '') {
-        if ($errorOutput == '') {
+      if ($output === '') {
+        if ($errorOutput === '') {
           return '';
         } else {
           return $errorOutput;
@@ -477,4 +547,20 @@ class PhpMemoryController extends ControllerBase {
     }
     return NULL;
   }
+
+  private function add_op_to_array(
+    array &$toBeOpLf,
+    array &$toBeOpPk,
+    string $key,
+    string $restOfLine1,
+    string $beginOfLine
+  ) {
+    $restOfLine2 = trim(substr($restOfLine1, strlen($beginOfLine)));
+    if ($key === 'Lock file operations') {
+      $toBeOpLf[] = $restOfLine2;
+    } else {
+      $toBeOpPk[] = $restOfLine2;
+    }
+  }
+
 }
