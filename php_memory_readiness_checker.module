@@ -75,3 +75,19 @@ function print_array_recursive($array, $indent = '') {
 ////    $implementations['automatic_updates'] = function() use () {};
 //  }
 //}
+
+/**
+ * Implements hook_requirements().
+ */
+function php_memory_readiness_checker_name_requirements($phase) {
+  $requirements = [];
+
+  // Check for custom error condition.
+    $requirements['php_memory_readiness_checker_error'] = [
+      'title' => t('Error For Free XDD!'),
+      'severity' => REQUIREMENT_ERROR,
+      'description' => t('There is an error in your custom module.'),
+    ];
+
+  return $requirements;
+}

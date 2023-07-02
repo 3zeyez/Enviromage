@@ -37,6 +37,8 @@ class PhpMemoryController extends ControllerBase {
    */
   public function content(Request $request): array {
     $this->get_update_info_about_enabled_modules();
+    \Drupal::messenger()->addError('Just an error for free XXD! I am trying
+      status report page');
     return [
       '#theme' => 'php_memory_readiness_checker',
       '#environment_configuration' => $this->get_environment_configuration(),
@@ -263,10 +265,7 @@ class PhpMemoryController extends ControllerBase {
 //        echo "<pre>";
 //        print_r(\Drupal::service('module_handler')->getModule($module_name));
 //        echo "</pre>";
-//        $module_size = $this->getDirectorySize($path);
-      /** @var Request $request */
-//      $module_size = $this->getMemoryUsage($request, $module_name);
-       $module_size = $this->my_module_measure_memory_usage();
+        $module_size = $this->getDirectorySize($path);
         $array[1][$module_name] = $this->human_filesize($module_size);
         $array[0]['total_size'] += $module_size;
 //          $files = \Drupal::service('file_system')->scanDirectory($path, '.*');
@@ -292,81 +291,6 @@ class PhpMemoryController extends ControllerBase {
     // Check if the current version is less than the latest version.
     return $current_version < $latest_version;
   }
-
-  public function getMemoryUsage(Request $request, string $module_name)
-  {
-    $module = $request->get($module_name);
-
-    return memory_get_peak_usage(true);
-
-//    $response = new Response();
-//    $response->setContent(json_encode([
-//      'module' => $module,
-//      'memoryUsage' => $memoryUsage,
-//    ]));
-
-//    return [
-//      'module' => $module,
-//      'memoryUsage' => $memoryUsage,
-//    ];
-//    return $response;
-  }
-
-
-  private function my_module_measure_memory_usage() {
-    $memoryUsage = memory_get_usage(true);
-    $formattedMemoryUsage = Markup::create('<pre>' . format_size($memoryUsage) . '</pre>');
-    dpm($formattedMemoryUsage, 'Memory Usage');
-    return $memoryUsage;
-  }
-
-//  private function get_update_info_about_enabled_modules() {
-////    $available = update_get_available();
-////    $module_info = update_calculate_project_data($available);
-////    foreach ($module_info as $module => $info) {
-////      echo "<h1>$module</h1>";
-////      echo "<pre>"; print_r($info); echo "</pre>";
-////    }
-//
-//    // Your custom module code.
-//
-////    $output = NULL;
-////    $result_code = NULL;
-////    $return_value = exec('ddev exec ls');
-////    // Display the output.
-////    echo gettype($output) . "</br>";
-////    if ($return_value === '') echo '$return_value is empty string!';
-////    echo "<pre>"; print_r($output); echo "</pre>";
-////
-////    // Run the Composer command.
-////    $return_value = exec('ddev exec composer update --dry-run --profile',
-////                  $output,
-////                    $result_code);
-////
-////    // Display the output.
-////    echo gettype($return_value) . "</br>";
-////    if ($return_value === '') echo '$return_value is empty string!';
-////    echo "<pre>"; print_r($output); echo "</pre>";
-//    // Run the Composer command.
-////    $command = 'ddev exec composer update --dry-run --profile';
-////    $command = 'composer update --dry-run --profile';
-////    $command = 'echo foo';
-////    $command = 'cd .. && composer update --dry-run --profile';
-////    $command = 'cd .. && ls -la';
-////    $command = 'cd .. && composer -V';
-//    $command = 'cd .. && composer update --dry-run';
-//    $output = NULL;
-//    $result_code = NULL;
-//    $return_value = exec($command, $output, $result_code);
-//
-//    // Display the output.
-//    echo gettype($return_value) . "</br>";
-//    if ($return_value === '') echo '$return_value is empty string!</br>';
-//    else echo $return_value . "</br>";
-//    if ($result_code == 0) echo "it's a zero</br>";
-//    echo "$result_code</br>";
-//    echo "<pre>"; print_r($output); echo "</pre>";
-//  }
 
   private function get_update_info_about_enabled_modules() {
     $result = $this->run_composer_command();
@@ -462,29 +386,40 @@ class PhpMemoryController extends ControllerBase {
       }
 
       $avg_memory_usage = $total_memory / count($lines);
-      echo "Total Memory equals to: $total_memory";
-      echo "</br>";
-      echo "Average memory usage equals to: $avg_memory_usage";
-      echo "</br>";
-      echo "To be installed:";
-      echo "<pre>";
-      $toBeInstalledPk[] = 'aziz';
-      $toBeInstalledLf[] = 'aziz';
-      print_r($toBeInstalledLf);
-      print_r($toBeInstalledPk);
-      echo "</pre>";
+      sort($toBeInstalledLf);
+      sort($toBeInstalledPk);
+      sort($toBeUpdatedLf);
+      sort($toBeUpdatedPk);
+      sort($toBeRemovedLf);
+      sort($toBeRemovedPk);
 
-      echo "To be updated:";
-      echo "<pre>";
-      print_r($toBeUpdatedLf);
-      print_r($toBeUpdatedPk);
-      echo "</pre>";
+      if (empty($toBeInstalledLf) && empty($toBeInstalledPk)) {
+        \Drupal::messenger()->addMessage('There is nothing new to install!');
+      } else {
+        \Drupal::messenger()->addMessage('Lock file operations: ');
+        foreach ($toBeInstalledLf as $item) {
+          \Drupal::messenger()->addMessage($item);
+        }
+      }
 
-      echo "To be removed:";
-      echo "<pre>";
-      print_r($toBeRemovedLf);
-      print_r($toBeRemovedPk);
-      echo "</pre>";
+      if (empty($toBeUpdatedLf) && empty($toBeUpdatedPk)) {
+        \Drupal::messenger()->addMessage('There is no update!');
+      } else {
+        \Drupal::messenger()->addMessage('Lock file operations: ');
+        foreach ($toBeUpdatedLf as $item) {
+          \Drupal::messenger()->addMessage($item);
+        }
+      }
+
+      if (empty($toBeRemovedLf) && empty($toBeRemovedPk)) {
+        \Drupal::messenger()->addMessage('There is nothing to remove');
+      } else {
+        \Drupal::messenger()->addMessage('Lock file operations: ');
+        foreach ($toBeRemovedLf as $item) {
+          \Drupal::messenger()->addMessage($item);
+        }
+      }
+
     }
   }
 
@@ -561,6 +496,15 @@ class PhpMemoryController extends ControllerBase {
     } else {
       $toBeOpPk[] = $restOfLine2;
     }
+  }
+
+  private function sort_array_from_other_array(array &$arr1, array $arr2) {
+    $order = array_flip($arr2);
+
+    // Sort $arr2 using the order in $arr1
+    usort($arr1, function($a, $b) use ($order) {
+      return $order[$a] - $order[$b];
+    });
   }
 
 }
