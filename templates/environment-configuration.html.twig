@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Environmnet configuration result table.
+ */
+#}
+<h4>{{ 'Environment Configuration'|t }}</h4>
+{#<p class="performance-profiler-creator-credits">Credits to the creator: <strong>Alessandro Torrisi</strong> (Code24 BV, The Netherlands), visit http://www.php-benchmark-script.com</p>#}
+<table>
+  <thead>
+  <tr>
+    {% for key, config in environment_configuration %}
+      <th>{{ key|t }}</th>
+    {% endfor %}
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    {% for key, config in environment_configuration %}
+      <td>{{ config|t }}</td>
+    {% endfor %}  </tr>
+  </tbody>
+</table>

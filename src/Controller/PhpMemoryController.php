@@ -35,15 +35,19 @@ class PhpMemoryController extends ControllerBase {
    * @return array
    *   Return markup array.
    */
-  public function content(Request $request): array {
-    $this->get_update_info_about_enabled_modules();
-    \Drupal::messenger()->addError('Just an error for free XXD! I am trying
-      status report page');
+  public function content(): array {
+//    $this->get_update_info_about_enabled_modules();
+//    \Drupal::messenger()->addError('Just an error for free XXD! I am trying
+//      status report page');
+    $environment_configuration = $this->get_environment_configuration();
+    $result = $this->getModulesSize();
+    $modules_size = $this->human_filesize($result[0]['total_size']);
+    $each_module = $result[1];
     return [
       '#theme' => 'php_memory_readiness_checker',
-      '#environment_configuration' => $this->get_environment_configuration(),
-      '#modules_size' => $this->human_filesize($this->getModulesSize($request)[0]['total_size']),
-      '#each_module' => $this->getModulesSize($request)[1],
+      '#environment_configuration' => $environment_configuration,
+      '#modules_size' => $modules_size,
+      '#each_module' => $each_module,
     ];
     //    return [
     //      '#markup' => $this->t(implode(', ', $this->listModules())),
@@ -101,7 +105,7 @@ class PhpMemoryController extends ControllerBase {
     return $size;
   }
 
-  private function human_filesize($bytes, $decimals = 2) {
+  public function human_filesize($bytes, $decimals = 2) {
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
       $factor = 1024;
       $units = ['B', 'KB', 'MB', 'GB', 'TB'];
@@ -252,7 +256,7 @@ class PhpMemoryController extends ControllerBase {
     return $retrieved_configurations;
   }
 
-  private function getModulesSize(Request $request) {
+  public function getModulesSize() {
     //    return \Drupal::service('module_handler')->loadAll();
     //    return \Drupal::service('module_handler')->getModuleList();
     $list_of_modules = \Drupal::service('module_handler')
@@ -292,7 +296,7 @@ class PhpMemoryController extends ControllerBase {
     return $current_version < $latest_version;
   }
 
-  private function get_update_info_about_enabled_modules() {
+  public function get_update_info_about_enabled_modules() {
     $result = $this->run_composer_command();
 
     if (is_null($result)) {

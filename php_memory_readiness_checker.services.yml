@@ -1,0 +1,17 @@
+services:
+#  performance_profiler.event_subscriber:
+#    class: Drupal\performance_profiler\EventSubscriber\PerformanceProfilerEventSubscriber
+#    arguments: ['@config.factory']
+#    tags:
+#      - { name: event_subscriber }
+#  performance_profiler.database_actions:
+#    class: Drupal\performance_profiler\PerformanceDatabaseActions
+#    arguments:
+#      - '@database'
+#      - '@logger.factory'
+#      - '@messenger'
+#      - '@renderer'
+#  performance_profiler.benchmark:
+#    class: Drupal\performance_profiler\PerformanceBenchmark
+  php_memory_readiness_checker.controller:
+    class: Drupal\php_memory_readiness_checker\Controller\PhpMemoryController

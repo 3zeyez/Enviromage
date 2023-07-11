@@ -22,6 +22,9 @@ function php_memory_readiness_checker_form_alter(&$form, FormStateInterface $for
   if ($form_id == 'node_article_edit_form') {
     $form['actions']['submit']['#value'] = t("Save this awesome article!");
   }
+  if ($form_id === 'composer_run') {
+    echo "HI";
+  }
 }
 
 /**
@@ -30,9 +33,28 @@ function php_memory_readiness_checker_form_alter(&$form, FormStateInterface $for
 function php_memory_readiness_checker_theme($existing, $type, $theme, $path) {
   return [
     'php_memory_readiness_checker' => [
-      'variables' => ['environment_configuration' => 'Default Value',
-                      'modules_size' => '',
-                      'each_module' => ''],
+      'variables' => [
+        'environment_configuration' => 'Default Value',
+        'modules_size' => '',
+        'each_module' => '',
+      ],
+    ],
+
+    'composer_command' => [
+      'variables' => [],
+    ],
+
+    'modules_size' => [
+      'variables' => [
+        'modules_size' => '',
+        'each_module' => '',
+      ],
+    ],
+
+    'environment_configuration' => [
+      'variables' => [
+        'environment_configuration' => 'Default Value',
+      ],
     ],
   ];
 }

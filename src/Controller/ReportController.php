@@ -23,8 +23,7 @@ class ReportController extends ControllerBase {
     $content = [];
 
     $content['message'] = [
-      '#markup' => t('Below is a list of all Event RSVPs including username,
-               email address and the name of the event they will be attending.')
+      '#markup' => t('<h1>Packages To Be Updated:</h1>')
     ];
 
     $headers = [
@@ -33,31 +32,17 @@ class ReportController extends ControllerBase {
       t('Update To'),
     ];
 
-    // Because load() returns an associative array with each table row
-    // as its own array, we can simply define the HTML table rows like this:
-    $table_rows = ['Dupal', 'V1', 'V2'];
-
-    // However, as an example, if load() did not return the results in
-    // a structure compatible with what we need, we could populate the
-    // $table_rows variable like so:
-    /*
-    $table_rows = [];
-    // Load the entries from database.
-    $rsvp_entries = $this->>load();
-
-    // Go through each entry and add it to $rows.
-    // Ultimately each array will be rendered as a rwo in an HTML table.
-    foreach($rsvp_entries as $entry) {
-      $table_rows[] = $entry;
-    }
-    */
+    $table_rows = [
+      ['Dupal', 'V1', 'V2'],
+      ['Automatic_updates', '10.1.0', '10.1.1'],
+    ];
 
     // Create the render array for rendering an HTML table.
     $content['table'] = [
       '#type' => 'table',
       '#header' => $headers,
       '#rows' => $table_rows,
-      '#empty' => t('No entries available.'),
+      '#empty' => t('No Updates!'),
     ];
 
     // Do not cache this page by setting the max-age to 0.

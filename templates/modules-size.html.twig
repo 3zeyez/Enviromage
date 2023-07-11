@@ -1,0 +1,31 @@
+{#<ol>#}
+{#  {% for key, config in each_module %}#}
+{#    <li>{{ key }}: {{ config }}</li>#}
+{#  {% endfor %}#}
+{#</ol>#}
+
+{#
+/**
+ * @file
+ * Environmnet configuration result table.
+ */
+#}
+<h4>{{ 'Modules\'size'|t }}</h4>
+<p><strong>Total Enabled Modules' Memory Size in Disk: {{ modules_size }} </strong></p>
+{#<p class="performance-profiler-creator-credits">Credits to the creator: <strong>Alessandro Torrisi</strong> (Code24 BV, The Netherlands), visit http://www.php-benchmark-script.com</p>#}
+<table>
+  <thead>
+  <tr>
+    <th>Module Name</th>
+    <th>Size</th>
+  </tr>
+  </thead>
+  <tbody>
+    {% for key, config in each_module %}
+      <tr>
+        <td>{{ key }}</td>
+        <td>{{ config }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
