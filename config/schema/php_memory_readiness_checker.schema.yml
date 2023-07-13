@@ -4,7 +4,7 @@ php_memory_readiness_checker.settings:
   mapping:
     settings:
       type: sequence
-      label: Content types the RSVP Form can display on
+      label: Configurations to retrieve
       sequence:
         type: string
         label: Content type

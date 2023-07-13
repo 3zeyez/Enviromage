@@ -5,3 +5,5 @@ settings_list:
   - realpath_cache_ttl
   - upload_max_filesize
   - post_max_size
+modules_list:
+  - automatic_updates
