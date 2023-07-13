@@ -41,7 +41,9 @@ function php_memory_readiness_checker_theme($existing, $type, $theme, $path) {
     ],
 
     'composer_command' => [
-      'variables' => [],
+      'variables' => [
+        'result' => [],
+      ],
     ],
 
     'modules_size' => [
