@@ -1,7 +1,5 @@
-<?php /** @noinspection PhpUnused */
-
-/** @noinspection PhpUndefinedFunctionInspection */
-/**
+<?php
+ /**
  * @file
  * Contains \Drupal\php_memory_readiness_checker\Controller\phpController.
  */
@@ -10,35 +8,26 @@ declare (strict_types=1);
 
 namespace Drupal\php_memory_readiness_checker\Controller;
 
-//phpinfo();
-
-use BadFunctionCallException;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Asset\LibraryDiscoveryInterface;
-use Drupal\Core\Asset\AttachedAssetsInterface;
-use InvalidArgumentException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Drupal\Core\Render\Markup;
 
 /**
- * Defines phpController class.
+ * Defines PhpMemoryController class.
  */
 class PhpMemoryController extends ControllerBase {
-//  use VersionParsingTrait;
 
   /**
    * Display the markup.
+   * For now, I am using it as a page to try out things:
+   *   . debugging
+   *   . displaying variable's content
+   *   . trying new methods and their behavior
    *
    * @return array
    *   Return markup array.
    */
   public function content(): array {
-//    $this->get_update_info_about_enabled_modules();
-//    \Drupal::messenger()->addError('Just an error for free XXD! I am trying
-//      status report page');
+    echo "</br></br></br></br>";
+    $this->get_update_info_about_enabled_modules();
     $environment_configuration = $this->get_environment_configuration();
     $result = $this->getModulesSize();
     $modules_size = $this->human_filesize($result[0]['total_size']);
@@ -49,17 +38,6 @@ class PhpMemoryController extends ControllerBase {
       '#modules_size' => $modules_size,
       '#each_module' => $each_module,
     ];
-    //    return [
-    //      '#markup' => $this->t(implode(', ', $this->listModules())),
-    //    ];
-//    echo $this->human_filesize($this->getModulesSize()) . "<br/>";
-//    echo "<pre>";
-//    //    print_r($this->listModules());
-////    print_r($this->get_environment_configuration());
-//    print_r(\Drupal::service('module_handler')->getModule('automatic_updates'));
-//    echo "</pre>";
-//    $this->getModulesSize();
-//    return [];
   }
 
   /**
@@ -105,7 +83,14 @@ class PhpMemoryController extends ControllerBase {
     return $size;
   }
 
-  public function human_filesize($bytes, $decimals = 2) {
+  /**
+   * This function converts bytes into a human-readable format.
+   * @param int $bytes
+   * @param int $decimals
+   *
+   * @return string
+   */
+  public function human_filesize(int $bytes, int $decimals = 2): string {
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
       $factor = 1024;
       $units = ['B', 'KB', 'MB', 'GB', 'TB'];
@@ -118,10 +103,18 @@ class PhpMemoryController extends ControllerBase {
       $bytes /= $factor;
     }
 
-    return round($bytes, 2) . ' ' . $units[$i];
+    return round($bytes, $decimals) . ' ' . $units[$i];
   }
 
-  private function getDirectorySize($directory) {
+  /**
+   * This function calculates the memory size of a directory
+   * @param string $directory
+   *  a string contains the directory's path
+   *
+   * @return int
+   *   size of directory in bytes
+   */
+  private function getDirectorySize(string $directory): int {
     $total_size = 0;
     $files = scandir($directory);
     foreach ($files as $file) {
@@ -212,15 +205,15 @@ class PhpMemoryController extends ControllerBase {
     }
     elseif ($var_type === 'array') {
       foreach ($var as $key => $value) {
-        $size += get_var_size($key);
-        $size += get_var_size($value);
+        $size += $this->get_var_size($key);
+        $size += $this->get_var_size($value);
       }
     }
     elseif ($var_type === 'object') {
       // Loading...
       $object_vars = get_object_vars($var);
       foreach ($object_vars as $object_var) {
-        $size += get_var_size($var->$object_var);
+        $size += $this->get_var_size($var->$object_var);
       }
     }
 
@@ -241,44 +234,46 @@ class PhpMemoryController extends ControllerBase {
    * @return array Returns an array containing configuration values
    */
   public function get_environment_configuration(): array {
-    $config = $this->config('php_memory_readiness_checker.settings');
-    $configurations = $config->get('settings_list');
+    $configurations = $this
+      ->config('php_memory_readiness_checker.settings')
+      ->get('settings_list');
 
     $retrieved_configurations = [];
-//    echo "<pre>";
-//    //    print_r($this->listModules());
-//    print_r($configurations);
-//    echo "</pre>";
 
-    foreach ($configurations as $index => $key) {
+    foreach ($configurations as $key) {
       $retrieved_configurations[$key] = ini_get($key);
     }
     return $retrieved_configurations;
   }
 
-  public function getModulesSize() {
-    //    return \Drupal::service('module_handler')->loadAll();
-    //    return \Drupal::service('module_handler')->getModuleList();
-    $list_of_modules = \Drupal::service('module_handler')
+  /**
+   * @return array
+   *   an array that contains the total size of all modules in bytes
+   *   and the size of each module in a human-readable format
+   */
+  public function getModulesSize(): array {
+    $list_of_modules1 = \Drupal::service('module_handler')
       ->getModuleDirectories();
+
+    $list_of_modules2 = $this
+      ->config('php_memory_readiness_checker.settings')
+      ->get('modules_list');
+
+    $list_of_modules = [];
+    foreach ($list_of_modules1 as $module_name => $path) {
+      if ( in_array($module_name, $list_of_modules2)) {
+        $list_of_modules[$module_name] = $path;
+      }
+    }
+
     $array = [0 => ['total_size' => 0],
               1 => []];
     foreach ($list_of_modules as $module_name => $path) {
-//      if ($this->is_module_has_update($module_name)) {
-//        $module_name = \Drupal::service('module_handler')->getName($module_name);
-//        echo "<pre>";
-//        print_r(\Drupal::service('module_handler')->getModule($module_name));
-//        echo "</pre>";
         $module_size = $this->getDirectorySize($path);
         $array[1][$module_name] = $this->human_filesize($module_size);
         $array[0]['total_size'] += $module_size;
-//          $files = \Drupal::service('file_system')->scanDirectory($path, '.*');
-//          echo "<pre>";
-//          print_r($files);
-//          echo "</pre>";
-
-//      }
     }
+
     return $array;
   }
 
@@ -296,24 +291,29 @@ class PhpMemoryController extends ControllerBase {
     return $current_version < $latest_version;
   }
 
-  public function get_update_info_about_enabled_modules() {
+  public function get_update_info_about_enabled_modules(): array {
     $result = $this->run_composer_command();
-
+    echo "<pre>Result: $result</pre></br>";
     if (is_null($result)) {
-      \Drupal::messenger()->addError('Composer command could not run!');
-      exit(1);
+      return ['Composer command could not run!'];
     } elseif (is_array($result)) {
       $output = $result['output'];
       $errorOutput = $result['errorOutput'];
+      echo $output;
+      echo "</br>";
+      echo $errorOutput;
     } elseif (is_string($result)) {
       $output = $result;
     }
     unset($result);
-    if (isset($output)){
+
+    echo "<pre>Output: $output</pre></br>";
+
+    $return = [];
+
+    if (isset($output)) {
       $lines = explode(PHP_EOL, $output);
       array_pop($lines);
-      echo "</br></br></br></br>";
-      echo "<pre>"; print_r($lines); echo "</pre>";
 
       $total_memory = 0.0;
 
@@ -390,6 +390,8 @@ class PhpMemoryController extends ControllerBase {
       }
 
       $avg_memory_usage = $total_memory / count($lines);
+
+      $return[] = 'The average memory usage is : ' . $avg_memory_usage;
       sort($toBeInstalledLf);
       sort($toBeInstalledPk);
       sort($toBeUpdatedLf);
@@ -398,33 +400,36 @@ class PhpMemoryController extends ControllerBase {
       sort($toBeRemovedPk);
 
       if (empty($toBeInstalledLf) && empty($toBeInstalledPk)) {
-        \Drupal::messenger()->addMessage('There is nothing new to install!');
-      } else {
-        \Drupal::messenger()->addMessage('Lock file operations: ');
+        $return[] = 'There is nothing new to install!';
+      }
+      else {
+        $return[] = 'Install - Lock file operations: ';
         foreach ($toBeInstalledLf as $item) {
-          \Drupal::messenger()->addMessage($item);
+          $return[] = $item;
         }
       }
 
       if (empty($toBeUpdatedLf) && empty($toBeUpdatedPk)) {
-        \Drupal::messenger()->addMessage('There is no update!');
-      } else {
-        \Drupal::messenger()->addMessage('Lock file operations: ');
+        $return[] = 'There is no update!';
+      }
+      else {
+        $return[] = 'Update - Lock file operations: ';
         foreach ($toBeUpdatedLf as $item) {
-          \Drupal::messenger()->addMessage($item);
+          $return[] = $item;
         }
       }
 
       if (empty($toBeRemovedLf) && empty($toBeRemovedPk)) {
-        \Drupal::messenger()->addMessage('There is nothing to remove');
-      } else {
-        \Drupal::messenger()->addMessage('Lock file operations: ');
+        $return[] = 'There is nothing to remove';
+      }
+      else {
+        $return[] = 'Remove - Lock file operations: ';
         foreach ($toBeRemovedLf as $item) {
-          \Drupal::messenger()->addMessage($item);
+          $return[] = $item;
         }
       }
-
     }
+    return $return;
   }
 
   private function retrieve_IUR($label, $restOfLine1, $beginOfLine1) {
@@ -451,7 +456,7 @@ class PhpMemoryController extends ControllerBase {
   }
 
   // Your custom module code.
-  private function run_composer_command(): string | array | NULL {
+  public function run_composer_command(): string | array | NULL {
     // Run the shell command within the DDEV environment.
     $descriptors = [
       1 => ['pipe', 'w'], // Capture standard output
@@ -472,7 +477,10 @@ class PhpMemoryController extends ControllerBase {
       fclose($pipes[2]);
 
       // Close the process
-      proc_close($process);
+      $status_code = proc_close($process);
+      if ($status_code === 1) {
+        echo "command not working";
+      }
 
       if ($output === '') {
         if ($errorOutput === '') {
@@ -487,13 +495,25 @@ class PhpMemoryController extends ControllerBase {
     return NULL;
   }
 
+  /**
+   * This function chooses if the operation (install, update or remove)
+   * belongs to lock file operations or to package operations.
+   * @param array $toBeOpLf  array of lock file operations
+   * @param array $toBeOpPk  array of package operations
+   * @param string $key
+   *   key says if the operation is a lock file or a package operation
+   * @param string $restOfLine1  the line output by composer
+   * @param string $beginOfLine  string to escape from the beginning
+   *
+   * @return void
+   */
   private function add_op_to_array(
     array &$toBeOpLf,
     array &$toBeOpPk,
     string $key,
     string $restOfLine1,
     string $beginOfLine
-  ) {
+  ): void {
     $restOfLine2 = trim(substr($restOfLine1, strlen($beginOfLine)));
     if ($key === 'Lock file operations') {
       $toBeOpLf[] = $restOfLine2;
@@ -502,7 +522,7 @@ class PhpMemoryController extends ControllerBase {
     }
   }
 
-  private function sort_array_from_other_array(array &$arr1, array $arr2) {
+  private function sort_array_from_other_array(array &$arr1, array $arr2): void {
     $order = array_flip($arr2);
 
     // Sort $arr2 using the order in $arr1
