@@ -1,9 +1,3 @@
-{#<ol>#}
-{#  {% for key, config in each_module %}#}
-{#    <li>{{ key }}: {{ config }}</li>#}
-{#  {% endfor %}#}
-{#</ol>#}
-
 {#
 /**
  * @file
@@ -11,8 +5,6 @@
  */
 #}
 <h4>{{ 'Modules\'size'|t }}</h4>
-<p><strong>Total Enabled Modules' Memory Size in Disk: {{ modules_size }} </strong></p>
-{#<p class="performance-profiler-creator-credits">Credits to the creator: <strong>Alessandro Torrisi</strong> (Code24 BV, The Netherlands), visit http://www.php-benchmark-script.com</p>#}
 <table>
   <thead>
   <tr>
@@ -27,5 +19,9 @@
         <td>{{ config }}</td>
       </tr>
     {% endfor %}
+    <tr>
+      <td><strong>Total Modules Memory Size</strong></td>
+      <td><strong>{{ modules_size }}</strong></td>
+    </tr>
   </tbody>
 </table>
