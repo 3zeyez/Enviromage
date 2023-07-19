@@ -42,20 +42,20 @@ function php_memory_readiness_checker_theme($existing, $type, $theme, $path) {
 
     'composer_command' => [
       'variables' => [
-        'result' => [],
+        'result' => NULL,
       ],
     ],
 
     'modules_size' => [
       'variables' => [
-        'modules_size' => '',
-        'each_module' => '',
+        'modules_size' => NULL,
+        'each_module' => NULL,
       ],
     ],
 
     'environment_configuration' => [
       'variables' => [
-        'environment_configuration' => 'Default Value',
+        'environment_configuration' => NULL,
       ],
     ],
   ];

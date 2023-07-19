@@ -1,6 +1,49 @@
 <h3>We have run the composer command :)!</h3>
-<ol>
-  {% for config in result %}
-    <li>{{ config }}</li>
-  {% endfor %}
-</ol>
+<h4>{{ 'Composer Performance Benchmark Overview: '|t }}</h4>
+<table>
+  <thead>
+  <tr>
+    <th>Average Memory Usage</th>
+    <th>Command Execution Time</th>
+    <th>Lock File Operation</th>
+    <th>Package Operation</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>{{ result.memory_avg_usage }}</td>
+    <td>{{ result.time_usage }}</td>
+    <td>
+      <ul>
+        <li>{{ result.lock_file_operation.numberOfInstalls }} Install</li>
+        <li>{{ result.lock_file_operation.numberOfUpdates }} Update</li>
+        <li>{{ result.lock_file_operation.numberOfRemoves }} Remove</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li>{{ result.package_operation.numberOfInstalls }} Install</li>
+        <li>{{ result.package_operation.numberOfUpdates }} Update</li>
+        <li>{{ result.package_operation.numberOfRemoves }} Remove</li>
+      </ul>
+    </td>
+  </tbody>
+</table>
+<h4>{{ 'Operations: '|t }}</h4>
+<table>
+  <thead>
+  <tr>
+    <th>Lock File Operations</th>
+    <th>Package Operations</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>
+      {% for line in result.message.lock_file_operation %}
+        <p>line</p>
+      {% endfor %}
+    </td>
+  </tr>
+  </tbody>
+</table>

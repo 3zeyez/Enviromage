@@ -82,6 +82,7 @@ class RunComposerCommandForm extends FormBase {
     //    echo "<pre>"; print_r($markup); echo "</pre>";
     $markup = [
       '#theme' => 'composer_command',
+      '#result' => $result,
     ];
     $response = new AjaxResponse();
     $response->addCommand(

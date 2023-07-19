@@ -27,7 +27,9 @@ class PhpMemoryController extends ControllerBase {
    */
   public function content(): array {
     echo "</br></br></br></br>";
-    $this->get_update_info_about_enabled_modules();
+//    $return = $this->get_update_info_about_enabled_modules();
+//    echo "<pre>"; print_r($return); echo "</pre>";
+    $this->run_composer_command();
     $environment_configuration = $this->get_environment_configuration();
     $result = $this->getModulesSize();
     $modules_size = $this->human_filesize($result[0]['total_size']);
@@ -293,21 +295,18 @@ class PhpMemoryController extends ControllerBase {
 
   public function get_update_info_about_enabled_modules(): array {
     $result = $this->run_composer_command();
-    echo "<pre>Result: $result</pre></br>";
     if (is_null($result)) {
       return ['Composer command could not run!'];
-    } elseif (is_array($result)) {
-      $output = $result['output'];
-      $errorOutput = $result['errorOutput'];
-      echo $output;
-      echo "</br>";
-      echo $errorOutput;
     } elseif (is_string($result)) {
+      if ($result === 'command not working') {
+        return ['Composer command could not run!'];
+        /**
+         * @todo // display proper output of failure, so that it helps the user avoid it.
+         */
+      }
       $output = $result;
     }
     unset($result);
-
-    echo "<pre>Output: $output</pre></br>";
 
     $return = [];
 
@@ -318,6 +317,8 @@ class PhpMemoryController extends ControllerBase {
       $total_memory = 0.0;
 
       $key = '';
+      $lf_label = 'lock_file_operation';
+      $p_label = 'package_operation';
       $toBeInstalledLf = [];
       $toBeUpdatedLf = [];
       $toBeRemovedLf = [];
@@ -328,7 +329,10 @@ class PhpMemoryController extends ControllerBase {
         $closingBracketPos = strpos($line, ']');
         $substring = substr($line, 1, $closingBracketPos - 1);
 
-        $memory = (float) $substring;
+        $number = (float) $substring;
+        $unit = substr($substring, strlen((string) $number), 1);
+        $memory_string = $number . $unit;
+        $memory = $this->return_bytes($memory_string);
         $total_memory += $memory;
 
         $restOfLine1 = trim(substr($line, strlen($substring) + 2));
@@ -336,15 +340,15 @@ class PhpMemoryController extends ControllerBase {
         // Lock file operations:
         $beginOfLine = substr($restOfLine1, 0, strlen('Lock file operations:'));
         if ($beginOfLine === 'Lock file operations:') {
-          $this->retrieve_IUR('Lock file operations:', $restOfLine1, $beginOfLine);
+          $this->retrieve_IUR($lf_label, $restOfLine1, $beginOfLine, $return);
           $key = 'Lock file operations';
         }
         unset($beginOfLine); // end of Lock file operations
 
-        // Package operations:
+        // Package operations:s
         $beginOfLine = substr($restOfLine1, 0, strlen('Package operations:'));
         if ($beginOfLine === 'Package operations:') {
-          $this->retrieve_IUR('Package operations:', $restOfLine1, $beginOfLine);
+          $this->retrieve_IUR($p_label, $restOfLine1, $beginOfLine, $return);
           $key = 'Package operations';
         }
         unset($beginOfLine); // end of Package operations
@@ -391,7 +395,12 @@ class PhpMemoryController extends ControllerBase {
 
       $avg_memory_usage = $total_memory / count($lines);
 
-      $return[] = 'The average memory usage is : ' . $avg_memory_usage;
+      $return['memory_avg_usage'] = $this->human_filesize((int) $avg_memory_usage);
+      $return['time_usage'] = substr(
+        $lines[count($lines) - 1],
+        strpos($lines[count($lines) - 1],
+          'time: ') + 6
+      );
       sort($toBeInstalledLf);
       sort($toBeInstalledPk);
       sort($toBeUpdatedLf);
@@ -399,64 +408,91 @@ class PhpMemoryController extends ControllerBase {
       sort($toBeRemovedLf);
       sort($toBeRemovedPk);
 
-      if (empty($toBeInstalledLf) && empty($toBeInstalledPk)) {
-        $return[] = 'There is nothing new to install!';
+      $return['message'][$lf_label] = [];
+      $return['message'][$p_label] = [];
+
+      if (empty($toBeInstalledLf)) {
+        $return['message'][$lf_label][] = 'There is nothing new to install!';
       }
       else {
-        $return[] = 'Install - Lock file operations: ';
         foreach ($toBeInstalledLf as $item) {
-          $return[] = $item;
+          $return['message'][$lf_label][] = "Install - $item";
         }
       }
 
-      if (empty($toBeUpdatedLf) && empty($toBeUpdatedPk)) {
-        $return[] = 'There is no update!';
+      if (empty($toBeInstalledPk)) {
+        $return['message'][$p_label][] = 'There is nothing new to install!';
       }
       else {
-        $return[] = 'Update - Lock file operations: ';
+        foreach ($toBeInstalledPk as $item) {
+          $return['message'][$p_label][] = "Install - $item";
+        }
+      }
+
+      if (empty($toBeUpdatedLf)) {
+        $return['message'][$lf_label][] = 'There is no update!';
+      }
+      else {
         foreach ($toBeUpdatedLf as $item) {
-          $return[] = $item;
+          $return['message'][$lf_label][] = "Update - $item";
         }
       }
 
-      if (empty($toBeRemovedLf) && empty($toBeRemovedPk)) {
-        $return[] = 'There is nothing to remove';
+      if (empty($toBeUpdatedPk)) {
+        $return['message'][$p_label][] = 'There is no update!';
       }
       else {
-        $return[] = 'Remove - Lock file operations: ';
+        foreach ($toBeUpdatedPk as $item) {
+          $return['message'][$p_label][] = "Update - $item";
+        }
+      }
+
+      if (empty($toBeRemovedLf)) {
+        $return['message'][$lf_label][] = 'There is nothing to remove!';
+      }
+      else {
         foreach ($toBeRemovedLf as $item) {
-          $return[] = $item;
+          $return['message'][$lf_label][] = "Remove - $item";
+        }
+      }
+
+      if (empty($toBeRemovedPk)) {
+        $return['message'][$p_label][] = 'There is nothing to remove!';
+      }
+      else {
+        foreach ($toBeRemovedPk as $item) {
+          $return['message'][$p_label][] = "Remove - $item";
         }
       }
     }
+
     return $return;
   }
 
-  private function retrieve_IUR($label, $restOfLine1, $beginOfLine1) {
-    echo "$label";
-    echo "</br>";
+  private function retrieve_IUR(
+    string $label,
+    string $restOfLine1,
+    string $beginOfLine1,
+    array &$return): void {
+
+    $return[$label] = [];
 
     // Installs
     $restOfLine2 = trim(substr($restOfLine1, strlen($beginOfLine1)));
     $numberOfInstalls = (int) $restOfLine2;
-    echo "We have $numberOfInstalls Installs.";
-    echo "</br>";
+    $return[$label]['numberOfInstalls'] = $numberOfInstalls;
 
     // Updates
-    $restOfLine2 = substr($restOfLine2, strlen('0 installs,'));
+    $restOfLine2 = substr($restOfLine2, strlen("$numberOfInstalls installs,"));
     $numberOfUpdates = (int) $restOfLine2;
-    echo "We have $numberOfUpdates Updates.";
-    echo "</br>";
+    $return[$label]['numberOfUpdates'] = $numberOfUpdates;
 
     // Removes
-    $restOfLine2 = substr($restOfLine2, strlen('10 updates,'));
-    $numberOfRemoves = (int) $restOfLine2;
-    echo "We have $numberOfRemoves Removes.";
-    echo "</br>";
+    $restOfLine2 = substr($restOfLine2, strlen("$numberOfUpdates updates,"));
+    $return[$label]['numberOfRemoves'] = ((int) $restOfLine2);
   }
 
-  // Your custom module code.
-  public function run_composer_command(): string | array | NULL {
+  public function run_composer_command(): string | NULL {
     // Run the shell command within the DDEV environment.
     $descriptors = [
       1 => ['pipe', 'w'], // Capture standard output
@@ -466,31 +502,23 @@ class PhpMemoryController extends ControllerBase {
       $descriptors, $pipes, '/var/www/html');
 
     if (is_resource($process)) {
-      // Get the standard output
-      $output = stream_get_contents($pipes[1]);
-
       // Get the standard error output
+      // It is composer's developer choice
       $errorOutput = stream_get_contents($pipes[2]);
 
       // Close the pipes
       fclose($pipes[1]);
       fclose($pipes[2]);
 
-      // Close the process
+      // Close the process and get status code of command running
       $status_code = proc_close($process);
-      if ($status_code === 1) {
-        echo "command not working";
+
+      // Try Catch Composer Command fail @TO-DO
+      if ($status_code !== 0) {
+        return "command not working";
       }
 
-      if ($output === '') {
-        if ($errorOutput === '') {
-          return '';
-        } else {
-          return $errorOutput;
-        }
-      } else {
-        return ['output' => $output, 'errorOutput' => $errorOutput];
-      }
+      return $errorOutput;
     }
     return NULL;
   }
