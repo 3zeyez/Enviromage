@@ -41,7 +41,12 @@
   <tr>
     <td>
       {% for line in result.message.lock_file_operation %}
-        <p>line</p>
+        <p>{{ line }}</p>
+      {% endfor %}
+    </td>
+    <td>
+      {% for line in result.message.package_operation %}
+        <p>{{ line }}</p>
       {% endfor %}
     </td>
   </tr>
