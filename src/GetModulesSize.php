@@ -8,9 +8,11 @@ declare(strict_types=1);
 
 namespace Drupal\php_memory_readiness_checker;
 
+use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class GetModulesSize {
+
+class GetModulesSize extends ControllerBase {
 
   /**
    * @var \Drupal\php_memory_readiness_checker\Utility

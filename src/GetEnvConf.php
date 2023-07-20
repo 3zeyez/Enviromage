@@ -8,7 +8,9 @@ declare(strict_types=1);
 
 namespace Drupal\php_memory_readiness_checker;
 
-class GetEnvConf {
+use Drupal\Core\Controller\ControllerBase;
+
+class GetEnvConf extends ControllerBase {
 
   /**
    * Retrieves environment configuration values from API configuration file:

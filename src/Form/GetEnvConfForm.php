@@ -11,7 +11,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\php_memory_readiness_checker\Controller\PhpMemoryController;
+use Drupal\php_memory_readiness_checker\GetEnvConf;
 use Drupal\Core\Render\Renderer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -27,17 +27,17 @@ class GetEnvConfForm extends FormBase {
   /**
    * @var \Drupal\php_memory_readiness_checker\Controller\PhpMemoryController
    */
-  protected $PhpMemoryController;
+  protected $GetEnvConf;
 
-  public function __construct(Renderer $renderer, PhpMemoryController $PhpMemoryController) {
+  public function __construct(Renderer $renderer, GetEnvConf $GetEnvConf) {
     $this->renderer = $renderer;
-    $this->PhpMemoryController = $PhpMemoryController;
+    $this->GetEnvConf = $GetEnvConf;
   }
 
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('renderer'),
-      $container->get('php_memory_readiness_checker.controller'),
+      $container->get('php_memory_readiness_checker.get_env_conf'),
     );
   }
 
@@ -71,7 +71,7 @@ class GetEnvConfForm extends FormBase {
   }
 
   public function getEnvConfig(): AjaxResponse{
-    $result = $this->PhpMemoryController->get_environment_configuration();
+    $result = $this->GetEnvConf->get_environment_configuration();
     $markup = [
       '#theme' => 'environment_configuration',
       '#environment_configuration' => $result,

@@ -5,3 +5,13 @@ services:
       - '@php_memory_readiness_checker.utility'
   php_memory_readiness_checker.utility:
     class: Drupal\php_memory_readiness_checker\Utility
+  php_memory_readiness_checker.get_env_conf:
+    class: Drupal\php_memory_readiness_checker\GetEnvConf
+  php_memory_readiness_checker.get_modules_size:
+    class: Drupal\php_memory_readiness_checker\GetModulesSize
+    arguments:
+      - '@php_memory_readiness_checker.utility'
+  php_memory_readiness_checker.run_composer_command:
+    class: Drupal\php_memory_readiness_checker\RunComposerCommand
+    arguments:
+      - '@php_memory_readiness_checker.utility'

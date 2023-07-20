@@ -11,8 +11,8 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\php_memory_readiness_checker\Controller\PhpMemoryController;
 use Drupal\Core\Render\Renderer;
+use Drupal\php_memory_readiness_checker\RunComposerCommand;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class RunComposerCommandForm extends FormBase {
@@ -27,17 +27,17 @@ class RunComposerCommandForm extends FormBase {
   /**
    * @var \Drupal\php_memory_readiness_checker\Controller\PhpMemoryController
    */
-  protected $PhpMemoryController;
+  protected $RunComposerCommand;
 
-  public function __construct(Renderer $renderer, PhpMemoryController $PhpMemoryController) {
+  public function __construct(Renderer $renderer, RunComposerCommand $RunComposerCommand) {
     $this->renderer = $renderer;
-    $this->PhpMemoryController = $PhpMemoryController;
+    $this->RunComposerCommand = $RunComposerCommand;
   }
 
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('renderer'),
-      $container->get('php_memory_readiness_checker.controller'),
+      $container->get('php_memory_readiness_checker.run_composer_command'),
     );
   }
 
@@ -78,7 +78,7 @@ class RunComposerCommandForm extends FormBase {
    * Submit handler for PHP benchmark AJAX.
    */
   public function runComposerCommand(): AjaxResponse {
-    $result = $this->PhpMemoryController->get_update_info_about_enabled_modules();
+    $result = $this->RunComposerCommand->get_update_info_about_enabled_modules();
     //    echo "<pre>"; print_r($markup); echo "</pre>";
     $markup = [
       '#theme' => 'composer_command',
