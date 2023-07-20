@@ -7,7 +7,7 @@ php_memroy_readiness_checker.admin:
   menu_name: main
 
 php_memory_readiness_checker.admin_settings_link:
-  title: Environment Configuration List Settings
+  title: PHP Memory Readiness Module
   description: Choose the environment configuration settings related to memory
   route_name: php_memory_readiness_checker.admin_settings
   parent: system.admin_config_development

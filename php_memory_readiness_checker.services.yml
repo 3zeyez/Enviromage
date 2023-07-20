@@ -1,3 +1,7 @@
 services:
   php_memory_readiness_checker.controller:
     class: Drupal\php_memory_readiness_checker\Controller\PhpMemoryController
+    arguments:
+      - '@php_memory_readiness_checker.utility'
+  php_memory_readiness_checker.utility:
+    class: Drupal\php_memory_readiness_checker\Utility

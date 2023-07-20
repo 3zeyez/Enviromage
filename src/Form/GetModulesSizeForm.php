@@ -12,6 +12,7 @@ use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\php_memory_readiness_checker\Controller\PhpMemoryController;
+use Drupal\php_memory_readiness_checker\Utility;
 use Drupal\Core\Render\Renderer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -29,15 +30,26 @@ class GetModulesSizeForm extends FormBase {
    */
   protected $PhpMemoryController;
 
-  public function __construct(Renderer $renderer, PhpMemoryController $PhpMemoryController) {
+  /**
+   * @var \Drupal\php_memory_readiness_checker\Utility
+   */
+  protected $utility;
+
+  public function __construct(
+    Renderer $renderer,
+    PhpMemoryController $PhpMemoryController,
+    Utility $utility
+  ) {
     $this->renderer = $renderer;
     $this->PhpMemoryController = $PhpMemoryController;
+    $this->utility= $utility;
   }
 
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('renderer'),
       $container->get('php_memory_readiness_checker.controller'),
+      $container->get('php_memory_readiness_checker.utility'),
     );
   }
 
@@ -74,7 +86,7 @@ class GetModulesSizeForm extends FormBase {
 
   public function getModulesSize(): AjaxResponse{
     $result = $this->PhpMemoryController->getModulesSize();
-    $modules_size = $this->PhpMemoryController->human_filesize($result[0]['total_size']);
+    $modules_size = $this->utility->human_filesize($result[0]['total_size']);
     $each_module = $result[1];
     $markup = [
       '#theme' => 'modules_size',
