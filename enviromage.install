@@ -5,7 +5,7 @@
  * Install, update and uninstall functions for the PHP Memory Readiness Checker module.
  */
 
-function php_memory_readiness_checker_schema() {
+function enviromage_schema() {
   // Create a database table called 'update' with the following columns:
   // 1) id [serial], 2) uid [int], 3) nid [int], 4) mail [varchar], 5) created [int]
   $schema['rsvplist'] = [

@@ -10,14 +10,14 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Implements hook_cron()
  */
-function php_memory_readiness_checker_cron(): void {
-  \Drupal::messenger()->addMessage(t("Hello from php_memory_readiness_checker cron hook"));
+function enviromage_cron(): void {
+  \Drupal::messenger()->addMessage(t("Hello from enviromage cron hook"));
 }
 
 /**
  * Implements hook_form_alter().
  */
-function php_memory_readiness_checker_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
+function enviromage_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
 //  \Drupal::messenger()->addMessage(t("form_id of this form is @id", ['@id' => $form_id]));
   if ($form_id == 'node_article_edit_form') {
     $form['actions']['submit']['#value'] = t("Save this awesome article!");
@@ -30,9 +30,9 @@ function php_memory_readiness_checker_form_alter(&$form, FormStateInterface $for
 /**
  * Implements hook_theme().
  */
-function php_memory_readiness_checker_theme($existing, $type, $theme, $path) {
+function enviromage_theme($existing, $type, $theme, $path) {
   return [
-    'php_memory_readiness_checker' => [
+    'enviromage' => [
       'variables' => [
         'environment_configuration' => 'Default Value',
         'modules_size' => '',
@@ -76,7 +76,7 @@ function print_array_recursive($array, $indent = '') {
 /**
  * Implements hook_module_implements_alter
  */
-//function php_memory_readiness_checker_module_implements_alter(&$implementations, $hook) {
+//function enviromage_module_implements_alter(&$implementations, $hook) {
 ////  echo "<pre>";
 ////  $number_of_elements = count($implementations);
 ////  echo "${number_of_elements} </br>";
@@ -95,7 +95,7 @@ function print_array_recursive($array, $indent = '') {
 //    $memory_peak_usage =  memory_get_peak_usage(true);
 //    \Drupal::messenger()->addMessage(t("The memory usage of $hook hook is @u",
 //      ['@u' => $memory_peak_usage]));
-////    array_unshift($implementations, 'php_memory_readiness_checker');
+////    array_unshift($implementations, 'enviromage');
 ////    $implementations['automatic_updates'] = function() use () {};
 //  }
 //}
@@ -103,11 +103,11 @@ function print_array_recursive($array, $indent = '') {
 /**
  * Implements hook_requirements().
  */
-function php_memory_readiness_checker_name_requirements($phase) {
+function enviromage_name_requirements($phase) {
   $requirements = [];
 
   // Check for custom error condition.
-    $requirements['php_memory_readiness_checker_error'] = [
+    $requirements['enviromage_error'] = [
       'title' => t('Error For Free XDD!'),
       'severity' => REQUIREMENT_ERROR,
       'description' => t('There is an error in your custom module.'),

@@ -5,13 +5,13 @@
  * runs composer performance check
  */
 
-namespace Drupal\php_memory_readiness_checker\Form;
+namespace Drupal\enviromage\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\php_memory_readiness_checker\GetEnvConf;
+use Drupal\enviromage\GetEnvConf;
 use Drupal\Core\Render\Renderer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -37,7 +37,7 @@ class GetEnvConfForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('renderer'),
-      $container->get('php_memory_readiness_checker.get_env_conf'),
+      $container->get('enviromage.get_env_conf'),
     );
   }
 

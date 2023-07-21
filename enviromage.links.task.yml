@@ -1,0 +1,19 @@
+locale.translate_page:
+  route_name: enviromage.admin_settings
+  base_route: enviromage.admin_settings_link
+  title: 'Environment Configuration Settings'
+
+enviromage.run_composer:
+  route_name: enviromage.run_composer
+  base_route: enviromage.admin_settings_link
+  title: 'Composer Performance Check'
+
+enviromage.get_modules_size:
+  route_name: enviromage.get_modules_size
+  base_route: enviromage.admin_settings_link
+  title: 'Get Modules Memory Size'
+
+enviromage.get_env_conf:
+  route_name: enviromage.get_env_conf
+  base_route: enviromage.admin_settings_link
+  title: 'Retrieve Environment Configuration'
