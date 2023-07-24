@@ -7,3 +7,5 @@ settings_list:
   - post_max_size
 modules_list:
   - automatic_updates
+composer_package:
+  - all

@@ -7,7 +7,7 @@ enviromage.content:
     _permission: access content
 
 enviromage.run_composer:
-  path: /admin/config/development/run_composer
+  path: /admin/config/development/env_config/run_composer
   defaults:
     _form: \Drupal\enviromage\Form\RunComposerCommandForm
     _title: Run The Composer Performance Check
@@ -15,7 +15,7 @@ enviromage.run_composer:
     _permission: administer env settings
 
 enviromage.get_modules_size:
-  path: /admin/config/development/modules_size
+  path: /admin/config/development/env_config/modules_size
   defaults:
     _form: \Drupal\enviromage\Form\GetModulesSizeForm
     _title: Get The Memory Size of Modules or Module in Disk
@@ -23,7 +23,7 @@ enviromage.get_modules_size:
     _permission: administer env settings
 
 enviromage.get_env_conf:
-  path: /admin/config/development/get_env_conf
+  path: /admin/config/development/env_config/get_env_conf
   defaults:
     _form: \Drupal\enviromage\Form\GetEnvConfForm
     _title: Get The Environment Configuration
