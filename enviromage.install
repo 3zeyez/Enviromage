@@ -6,10 +6,11 @@
  */
 
 function enviromage_schema() {
-  // Create a database table called 'update' with the following columns:
-  // 1) id [serial], 2) uid [int], 3) nid [int], 4) mail [varchar], 5) created [int]
-  $schema['rsvplist'] = [
-    'description' => 'Stores email, timestamp, nid and uid for an RSVP.',
+  $schema['log'] = [
+    'description' => 'Stores memory average, time execution, number of installs, number of updates, number of removes,
+    messages of installs, messages of updates and messages of removes (for both lock file and package operations).
+    Also, it stores a time stamp that indicates when the performance check has happened.',
+
     'fields' => [
       'id' => [
         'description' => 'The primary identifier for the record',
@@ -26,25 +27,116 @@ function enviromage_schema() {
         'default' => 0,
       ],
 
-      'nid' => [
-        'description' => 'The {node}.nid for this RSVP',
+      'avgM' => [
+        'description' => 'The memory average use while running composer update',
+        'type' => 'int', // in bytes
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+
+      'timeExec' => [
+        'description' => 'The time taken by the composer command to run in seconds',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ],
 
-      'mail' => [
-        'description' => 'Users\'s email address.',
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => FALSE,
+      'nbIL' => [
+        'description' => 'The number of installs of lock file operation',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+
+      'nbIP' => [
+        'description' => 'The number of installs of package operation',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+
+      'nbUL' => [
+        'description' => 'The number of updates of lock file operation',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+
+      'nbUP' => [
+        'description' => 'The number of updates of package operation',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+
+      'nbRL' => [
+        'description' => 'The number of removes of lock file operation',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+
+      'nbRP' => [
+        'description' => 'The number of removes of package file operation',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+
+      'msgIL' => [
+        'description' => 'The messages of installs of lock file operation',
+        'type' => 'blob',
+        'not null' => TRUE,
+        'default' => '',
+      ],
+
+      'msgIP' => [
+        'description' => 'The messages of installs of package operation',
+        'type' => 'blob',
+        'not null' => TRUE,
+        'default' => '',
+      ],
+
+      'msgUL' => [
+        'description' => 'The messages of updates of lock file operation',
+        'type' => 'blob',
+        'not null' => TRUE,
+        'default' => '',
+      ],
+
+      'msgUP' => [
+        'description' => 'The messages of updates of package operation',
+        'type' => 'blob',
+        'not null' => TRUE,
+        'default' => '',
+      ],
+
+      'msgRL' => [
+        'description' => 'The messages of removes of lock file operation',
+        'type' => 'blob',
+        'not null' => TRUE,
+        'default' => '',
+      ],
+
+      'msgRP' => [
+        'description' => 'The messages of removes of package operation',
+        'type' => 'blob',
+        'not null' => TRUE,
         'default' => '',
       ],
 
       'created' => [
         'description' => 'Timestamp for when RSVP was created',
         'type' => 'int',
+        'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ],
@@ -52,25 +144,37 @@ function enviromage_schema() {
 
     'primary key' => ['id'],
     'indexes' => [
-      'node' => ['nid'],
-      'node_user' => ['nid', 'uid'],
+      'user' => ['uid'],
     ],
   ];
 
-  // Create a database table named 'rsvplist_enabled' with the following fields:
-  // 1) nid [int]
-  $schema['rsvplist_enabled'] = [
-    'description' => 'Tracks whether RSVP is enabled or not for a node.',
+  $schema['msize'] = [
+    'description' => 'Stores modules memory size in disk.',
     'fields' => [
-      'nid' => [
-        'descripton' => 'The {node}.nid that has RSVPlist enabled',
+      'id' => [
+        'description' => 'The primary identifier for the record',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
       ],
+
+      'module_name' => [
+        'description' => 'The name of the module',
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => FALSE,
+      ],
+
+      'memory_size' => [
+        'description' => 'The memory size of the module',
+        'type' => 'int', // in bytes
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
     ],
-    'primary key' => ['nid'],
+    'primary key' => ['id'],
   ];
 
   return $schema;

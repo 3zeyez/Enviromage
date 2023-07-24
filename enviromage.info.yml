@@ -1,5 +1,5 @@
 name: EnviromageController
-description: This is description
+description: "Enviromage: Your captivating companion for Drupal development and performance optimization."
 package: Custom
 type: module
 version: '1.0'
