@@ -43,6 +43,7 @@ function enviromage_theme($existing, $type, $theme, $path) {
     'composer_command' => [
       'variables' => [
         'result' => NULL,
+        'version' => NULL,
       ],
     ],
 
