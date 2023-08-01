@@ -56,7 +56,7 @@ class RunComposerCommandForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('enviromage.settings');
 
-    $form['message'] = [
+    $form['message1'] = [
       '#type' => 'markup',
       '#markup' => '<p>Run the following command:
                     <code>composer update --dry-run --profile</code>.
@@ -64,13 +64,13 @@ class RunComposerCommandForm extends FormBase {
                     Also, it profiles memory and time usage.</p>',
     ];
 
-    $form['appearance'] = [
+    $form['customize_command'] = [
       '#type' => 'details',
-      '#title' => $this->t('Appearance'),
+      '#title' => $this->t('Customize your command'),
       '#open' => TRUE,
     ];
 
-    $form['appearance']['version_constraint'] = [
+    $form['customize_command']['version_constraint'] = [
       '#type' => 'textfield',
       '#title' => t('Choose the version constraint you want to update to'),
       '#description' => t('Enter your text here.'),
@@ -83,7 +83,7 @@ class RunComposerCommandForm extends FormBase {
       $moduleNames[$moduleName] = $moduleName;
     }
 
-    $form['appearance']['package'] = [
+    $form['customize_command']['package'] = [
       '#type' => 'select',
       '#title' => t('Choose which package to evaluate its update'),
       '#description' => t('choose just one'),

@@ -45,7 +45,7 @@ class GetEnvConfForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'run_composer_command';
+    return 'get_env_conf';
   }
 
   /**
@@ -72,6 +72,7 @@ class GetEnvConfForm extends FormBase {
 
   public function getEnvConfig(): AjaxResponse{
     $result = $this->GetEnvConf->get_environment_configuration();
+    $result['var'] = gettype($this->GetEnvConf);
     $markup = [
       '#theme' => 'environment_configuration',
       '#environment_configuration' => $result,
