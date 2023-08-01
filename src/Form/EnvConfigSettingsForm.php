@@ -41,7 +41,14 @@ class EnvConfigSettingsForm extends ConfigFormBase {
       'post_max_size' => 'post_max_size',];
 
     $config = $this->config('enviromage.settings');
-    $form['env_conf'] = [
+
+    $form['retrieve_env_config'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Your environment configuration retrieve approach settings'),
+      '#open' => TRUE,
+    ];
+
+    $form['retrieve_env_config']['env_conf'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Set the environment configurations to retrieve'),
       '#default_value' => $config->get('settings_list'),
@@ -57,7 +64,13 @@ class EnvConfigSettingsForm extends ConfigFormBase {
       $moduleNames[$moduleName] = $moduleName;
     }
 
-    $form['modules'] = [
+    $form['get_modules_size_settings'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Get Modules Memory Size Settings'),
+      '#open' => TRUE,
+    ];
+
+    $form['get_modules_size_settings']['modules'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Choose which modules to display'),
       '#default_value' => $config->get('modules_list'),
