@@ -8,3 +8,18 @@ enviromage.settings:
       sequence:
         type: string
         label: Content type
+    modules_list:
+      type: sequence
+      label: Modules To Get Size
+      sequence:
+        type: string
+        label: Content type
+    composer_package:
+      type: sequence
+      label: Package To Be Updated
+      sequence:
+        type: string
+        label: Content type
+    composer_command:
+      type: string
+      label: Composer Command To Be Run
