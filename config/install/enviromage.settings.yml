@@ -9,3 +9,4 @@ modules_list:
   - automatic_updates
 composer_package:
   - all
+composer_command: 'composer update automatic_updates --dry-run --profile'
