@@ -149,38 +149,105 @@ class RunComposerCommandForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $version_constraint = $form_state->getValue('version_constraint');
-    $package = $form_state->getValue('package');
+    // begin version constraint
 
-    $versionParser = new VersionParser();
+//    $version_constraint = $form_state->getValue('version_constraint');
+//    $package = $form_state->getValue('package');
+//
+//    $versionParser = new VersionParser();
+//
+//    try {
+//      // The parseConstraints() method will throw an exception if the version constraint is invalid.
+//      $versionParser->parseConstraints($version_constraint);
+//      // If the version constraint is valid, you can proceed with your code here.
+//      // For example, you can install the package using Composer or perform other actions.
+//      \Drupal::messenger()->addMessage(t('The version constraint is valid.'));
+//      $command = "composer update $package:$version_constraint --dry-run --profile";
+//
+//    } catch (\UnexpectedValueException $e) {
+//      // Handle the case when the version constraint is invalid.
+//      // For example, display an error message or log the error.
+//      // You can also check the exception message for more details on why the constraint is invalid.
+//      $errorMessage = $e->getMessage();
+//
+//      if ($version_constraint === '') {
+//        \Drupal::messenger()->addMessage(t('No version constraint is specified'));
+//        $command = "composer update $package --dry-run --profile";
+//      } else {
+//        \Drupal::messenger()->addError(t('The version constraint is not valid.'));
+//        $command = '';
+//      }
+//
+//    }
+//
+//    $this->config('enviromage.settings')
+//      ->set('composer_command', $command)
+//      ->save();
 
+    // end version constraint
+
+    // begin insert into database
+
+    //    $submitted_email = $form_state->getValue('email');
+//    $this->messenger()->addMessage(t("Te form is working! You entered @entry.",
+//      ['@entry' => $submitted_email]));
     try {
-      // The parseConstraints() method will throw an exception if the version constraint is invalid.
-      $versionParser->parseConstraints($version_constraint);
-      // If the version constraint is valid, you can proceed with your code here.
-      // For example, you can install the package using Composer or perform other actions.
-      \Drupal::messenger()->addMessage(t('The version constraint is valid.'));
-      $command = "composer update $package:$version_constraint --dry-run --profile";
+      // Begin Phase 1: initiate variables to save.
 
-    } catch (\UnexpectedValueException $e) {
-      // Handle the case when the version constraint is invalid.
-      // For example, display an error message or log the error.
-      // You can also check the exception message for more details on why the constraint is invalid.
-      $errorMessage = $e->getMessage();
+      // Get current user ID.
+      $uid = \Drupal::currentUser()->id();
 
-      if ($version_constraint === '') {
-        \Drupal::messenger()->addMessage(t('No version constraint is specified'));
-        $command = "composer update $package --dry-run --profile";
-      } else {
-        \Drupal::messenger()->addError(t('The version constraint is not valid.'));
-        $command = '';
-      }
+      // Obtain values as entered into the Form.
+      $email = $form_state->getValue('email');
 
+      $current_time = \Drupal::time()->getRequestTime();
+      // End Phase 1
+
+      // Begin Phase 2: save the values to the database
+
+      // Start to build a query builder object $query.
+      // https://www.drupal.org/docs/8/api/database-api/insert-queries
+      $query = \Drupal::database()->insert('rsvplist');
+
+      // Specify the fields that the query will insert into.
+      $query->fields([
+        'uid',
+        'nid',
+        'mail',
+        'created',
+      ]);
+
+      // Set the values of the fields we selected.
+      // Note that they must be in the same order as we defined them
+      // in the $query->fields([...]) above.
+      $query->values([
+        $uid,
+        $nid,
+        $email,
+        $current_time,
+      ]);
+
+      // Execute the query!
+      // Drupal handle the exact syntax of the query automatically!
+      $query->execute();
+      // End Phase 2
+
+      // Begin Phase 3: Display a success message
+
+      // Provide the form submitter a nice message.
+      \Drupal::messenger()->addMessage(
+        t('Thank you for your RSVP, you are on the list for the event!')
+      );
+      // End Phase 3
+    } catch (\Exception $e) {
+      \Drupal::messenger()->addError(
+        t('Unable to save RSVP settings at this time due to database error.
+          Please try again.')
+      );
     }
 
-    $this->config('enviromage.settings')
-      ->set('composer_command', $command)
-      ->save();
-
   }
+
+
+
 }
