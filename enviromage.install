@@ -6,7 +6,7 @@
  */
 
 function enviromage_schema() {
-  $schema['log'] = [
+  $schema['enviromage_log'] = [
     'description' => 'Stores memory average, time execution, number of installs, number of updates, number of removes,
     messages of installs, messages of updates and messages of removes (for both lock file and package operations).
     Also, it stores a time stamp that indicates when the performance check has happened.',
@@ -148,7 +148,7 @@ function enviromage_schema() {
     ],
   ];
 
-  $schema['msize'] = [
+  $schema['enviromage_msize'] = [
     'description' => 'Stores modules memory size in disk.',
     'fields' => [
       'id' => [
