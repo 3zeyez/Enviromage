@@ -5,14 +5,14 @@
  * Contains buttons to run the function of our module
  */
 
-namespace Drupal\php_memory_readiness_checker\Form;
+namespace Drupal\enviromage\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\php_memory_readiness_checker\GetModulesSize;
-use Drupal\php_memory_readiness_checker\Utility;
+use Drupal\enviromage\GetModulesSize;
+use Drupal\enviromage\Utility;
 use Drupal\Core\Render\Renderer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -26,12 +26,12 @@ class GetModulesSizeForm extends FormBase {
   protected $renderer;
 
   /**
-   * @var \Drupal\php_memory_readiness_checker\Controller\PhpMemoryController
+   * @var \Drupal\enviromage\Controller\PhpMemoryController
    */
   protected $GetModulesSize;
 
   /**
-   * @var \Drupal\php_memory_readiness_checker\Utility
+   * @var \Drupal\enviromage\Utility
    */
   protected $utility;
 
@@ -48,8 +48,8 @@ class GetModulesSizeForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('renderer'),
-      $container->get('php_memory_readiness_checker.get_modules_size'),
-      $container->get('php_memory_readiness_checker.utility'),
+      $container->get('enviromage.get_modules_size'),
+      $container->get('enviromage.utility'),
     );
   }
 

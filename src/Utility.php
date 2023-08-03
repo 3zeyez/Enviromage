@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\php_memory_readiness_checker;
+namespace Drupal\enviromage;
 
 class Utility {
   /**

@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\php_memory_readiness_checker;
+namespace Drupal\enviromage;
 
 use Drupal\Core\Controller\ControllerBase;
 
@@ -27,7 +27,7 @@ class GetEnvConf extends ControllerBase {
    */
   public function get_environment_configuration(): array {
     $configurations = $this
-      ->config('php_memory_readiness_checker.settings')
+      ->config('enviromage.settings')
       ->get('settings_list');
 
     $retrieved_configurations = [];

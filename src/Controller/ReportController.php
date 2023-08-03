@@ -2,12 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\php_memory_readiness_checker\Controller\ReportController.
+ * Contains \Drupal\enviromage\Controller\ReportController.
  */
 
 declare(strict_types = 1);
 
-namespace Drupal\php_memory_readiness_checker\Controller;
+namespace Drupal\enviromage\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\php_memory_readiness_checker\Controller\PhpMemoryController;

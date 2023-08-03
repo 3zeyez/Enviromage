@@ -1,0 +1,12 @@
+name: Enviromage
+description: "Enviromage: Your captivating companion for Drupal development and performance optimization."
+package: Custom
+type: module
+version: '1.0'
+core_version_requirement: '>=8'
+dependencies:
+  - drupal:automatic_updates
+libraries:
+  - enviromage/css
+  - enviromage/js
+configure: enviromage.admin_settings

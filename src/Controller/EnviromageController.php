@@ -1,24 +1,24 @@
 <?php
  /**
  * @file
- * Contains \Drupal\php_memory_readiness_checker\Controller\phpController.
+ * Contains \Drupal\enviromage\Controller\phpController.
  */
 
 declare (strict_types=1);
 
-namespace Drupal\php_memory_readiness_checker\Controller;
+namespace Drupal\enviromage\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\php_memory_readiness_checker\Utility;
+use Drupal\enviromage\Utility;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Defines PhpMemoryController class.
+ * Defines EnviromageController class.
  */
-class PhpMemoryController extends ControllerBase {
+class EnviromageController extends ControllerBase {
 
   /**
-   * @var \Drupal\php_memory_readiness_checker\Utility
+   * @var \Drupal\enviromage\Utility
    */
   protected $utility;
 
@@ -28,7 +28,7 @@ class PhpMemoryController extends ControllerBase {
 
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('php_memory_readiness_checker.utility'),
+      $container->get('enviromage.utility'),
     );
   }
   /**

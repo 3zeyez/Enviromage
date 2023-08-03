@@ -6,16 +6,17 @@
 
 declare(strict_types=1);
 
-namespace Drupal\php_memory_readiness_checker;
+namespace Drupal\enviromage;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\enviromage\Utility;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
 class GetModulesSize extends ControllerBase {
 
   /**
-   * @var \Drupal\php_memory_readiness_checker\Utility
+   * @var \Drupal\enviromage\Utility
    */
   protected $utility;
 
@@ -25,7 +26,7 @@ class GetModulesSize extends ControllerBase {
 
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('php_memory_readiness_checker.utility'),
+      $container->get('enviromage.utility'),
     );
   }
 
@@ -39,7 +40,7 @@ class GetModulesSize extends ControllerBase {
       ->getModuleDirectories();
 
     $list_of_modules2 = $this
-      ->config('php_memory_readiness_checker.settings')
+      ->config('enviromage.settings')
       ->get('modules_list');
 
     $list_of_modules = [];

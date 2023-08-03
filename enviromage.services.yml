@@ -1,0 +1,17 @@
+services:
+  enviromage.controller:
+    class: Drupal\enviromage\Controller\PhpMemoryController
+    arguments:
+      - '@enviromage.utility'
+  enviromage.utility:
+    class: Drupal\enviromage\Utility
+  enviromage.get_env_conf:
+    class: Drupal\enviromage\GetEnvConf
+  enviromage.get_modules_size:
+    class: Drupal\enviromage\GetModulesSize
+    arguments:
+      - '@enviromage.utility'
+  enviromage.run_composer_command:
+    class: Drupal\enviromage\RunComposerCommand
+    arguments:
+      - '@enviromage.utility'

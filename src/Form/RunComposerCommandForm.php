@@ -5,14 +5,14 @@
  * runs composer performance check
  */
 
-namespace Drupal\php_memory_readiness_checker\Form;
+namespace Drupal\enviromage\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Renderer;
-use Drupal\php_memory_readiness_checker\RunComposerCommand;
+use Drupal\enviromage\RunComposerCommand;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class RunComposerCommandForm extends FormBase {
@@ -25,7 +25,7 @@ class RunComposerCommandForm extends FormBase {
   protected $renderer;
 
   /**
-   * @var \Drupal\php_memory_readiness_checker\Controller\PhpMemoryController
+   * @var \Drupal\enviromage\Controller\EnviromageController
    */
   protected $RunComposerCommand;
 
@@ -37,7 +37,7 @@ class RunComposerCommandForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('renderer'),
-      $container->get('php_memory_readiness_checker.run_composer_command'),
+      $container->get('enviromage.run_composer_command'),
     );
   }
 

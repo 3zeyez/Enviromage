@@ -5,7 +5,7 @@
  * Contains the settings for administering the environment configuration
  */
 
-namespace Drupal\php_memory_readiness_checker\Form;
+namespace Drupal\enviromage\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -24,7 +24,7 @@ class EnvConfigSettingsForm extends ConfigFormBase {
    */
   protected function getEditableConfigNames() {
     return [
-      'php_memory_readiness_checker.settings',
+      'enviromage.settings',
     ];
   }
 
@@ -40,7 +40,7 @@ class EnvConfigSettingsForm extends ConfigFormBase {
       'upload_max_filesize' => 'upload_max_filesize',
       'post_max_size' => 'post_max_size',];
 
-    $config = $this->config('php_memory_readiness_checker.settings');
+    $config = $this->config('enviromage.settings');
     $form['env_conf'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Set the environment configurations to retrieve'),
@@ -80,7 +80,7 @@ class EnvConfigSettingsForm extends ConfigFormBase {
     }
 
     if (count($selected_settings) != 0) {
-      $this->config('php_memory_readiness_checker.settings')
+      $this->config('enviromage.settings')
         ->set('settings_list', $selected_settings)
         ->save();
     }
@@ -93,7 +93,7 @@ class EnvConfigSettingsForm extends ConfigFormBase {
     }
 
     if (count($selected_modules) != 0) {
-      $this->config('php_memory_readiness_checker.settings')
+      $this->config('enviromage.settings')
         ->set('modules_list', $selected_modules)
         ->save();
     }

@@ -1,47 +1,47 @@
-php_memory_readiness_checker.content:
-  path: /php_memory
+enviromage.content:
+  path: /enviromage
   defaults:
-    _controller: \Drupal\php_memory_readiness_checker\Controller\PhpMemoryController::content
-    _title: PHP Memory Readiness Checker Module
+    _controller: \Drupal\enviromage\Controller\EnviromageController::content
+    _title: Enviromage
   requirements:
     _permission: access content
 
-php_memory_readiness_checker.run_composer:
+enviromage.run_composer:
   path: /admin/config/development/run_composer
   defaults:
-    _form: \Drupal\php_memory_readiness_checker\Form\RunComposerCommandForm
+    _form: \Drupal\enviromage\Form\RunComposerCommandForm
     _title: Run The Composer Performance Check
   requirements:
     _permission: administer env settings
 
-php_memory_readiness_checker.get_modules_size:
+enviromage.get_modules_size:
   path: /admin/config/development/modules_size
   defaults:
-    _form: \Drupal\php_memory_readiness_checker\Form\GetModulesSizeForm
+    _form: \Drupal\enviromage\Form\GetModulesSizeForm
     _title: Get The Memory Size of Modules or Module in Disk
   requirements:
     _permission: administer env settings
 
-php_memory_readiness_checker.get_env_conf:
+enviromage.get_env_conf:
   path: /admin/config/development/get_env_conf
   defaults:
-    _form: \Drupal\php_memory_readiness_checker\Form\GetEnvConfForm
+    _form: \Drupal\enviromage\Form\GetEnvConfForm
     _title: Get The Environment Configuration
   requirements:
     _permission: administer env settings
 
-php_memory_readiness_checker.admin_settings:
+enviromage.admin_settings:
   path: /admin/config/development/env_config
   defaults:
-    _form: \Drupal\php_memory_readiness_checker\Form\EnvConfigSettingsForm
+    _form: \Drupal\enviromage\Form\EnvConfigSettingsForm
     _title: Environment Configurations List Settings
   requirements:
     _permission: administer env settings
 
-php_memory_readiness_checker.report:
+enviromage.report:
   path: /admin/reports/composer_report
   defaults:
-    _controller: \Drupal\php_memory_readiness_checker\Controller\ReportController::report
+    _controller: \Drupal\enviromage\Controller\ReportController::report
     _title: Composer Performance Report
   requirements:
     _permission: access content
