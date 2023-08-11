@@ -9,6 +9,7 @@ declare (strict_types=1);
 namespace Drupal\enviromage\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\enviromage\RunComposerCommand;
 use Drupal\enviromage\Utility;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -22,13 +23,17 @@ class EnviromageController extends ControllerBase {
    */
   protected $utility;
 
-  public function __construct(Utility $utility) {
+  protected $composer;
+
+  public function __construct(Utility $utility, RunComposerCommand $composer) {
     $this->utility = $utility;
+    $this->composer = $composer;
   }
 
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('enviromage.utility'),
+      $container->get('enviromage.run_composer_command'),
     );
   }
   /**
@@ -45,17 +50,27 @@ class EnviromageController extends ControllerBase {
     echo "</br></br></br></br>";
 //    $return = $this->get_update_info_about_enabled_modules();
 //    echo "<pre>"; print_r($return); echo "</pre>";
-    $this->run_composer_command();
-    $environment_configuration = $this->get_environment_configuration();
-    $result = $this->getModulesSize();
-    $modules_size = $this->utility->human_filesize($result[0]['total_size']);
-    $each_module = $result[1];
-    return [
-      '#theme' => 'php_memory_readiness_checker',
-      '#environment_configuration' => $environment_configuration,
-      '#modules_size' => $modules_size,
-      '#each_module' => $each_module,
-    ];
+    $database = \Drupal::database();
+    $select_query = $database->select('enviromage_command', 'c');
+    $select_query->addField('c', 'command');
+    $entries = $select_query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    echo "<pre>"; print_r($entries); echo "</pre>";
+
+    $result = $this->composer->get_update_info_about_enabled_modules($entries[count($entries) - 1]['command']);
+
+    echo "<pre>"; print_r($result); echo "</pre>";
+//    $this->run_composer_command();
+//    $environment_configuration = $this->get_environment_configuration();
+//    $result = $this->getModulesSize();
+//    $modules_size = $this->utility->human_filesize($result[0]['total_size']);
+//    $each_module = $result[1];
+//    return [
+//      '#theme' => 'php_memory_readiness_checker',
+//      '#environment_configuration' => $environment_configuration,
+//      '#modules_size' => $modules_size,
+//      '#each_module' => $each_module,
+//    ];
+    return [];
   }
 
   /**
