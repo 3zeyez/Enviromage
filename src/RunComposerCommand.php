@@ -28,8 +28,8 @@ class RunComposerCommand {
     );
   }
 
-  public function get_update_info_about_enabled_modules(): array {
-    $result = $this->run_composer_command();
+  public function get_update_info_about_enabled_modules(string $command): array {
+    $result = $this->run_composer_command($command);
     if (is_null($result)) {
       return ['Composer command could not run!'];
     } elseif (is_string($result)) {
@@ -87,6 +87,18 @@ class RunComposerCommand {
           $key = 'Package operations';
         }
         unset($beginOfLine); // end of Package operations
+
+        // nothing to modify
+        $beginOfLine = substr($restOfLine1, 0, strlen('Nothing'));
+        if ($beginOfLine === 'Nothing') {
+          $return[$lf_label]['numberOfInstalls'] = 0;
+          $return[$lf_label]['numberOfUpdates'] = 0;
+          $return[$lf_label]['numberOfRemoves'] = 0;
+          $return[$p_label]['numberOfInstalls'] = 0;
+          $return[$p_label]['numberOfUpdates'] = 0;
+          $return[$p_label]['numberOfRemoves'] = 0;
+        }
+        unset($beginOfLine); // end nothing to modify
 
         // Files to be installed
         $beginOfLine = substr($restOfLine1, 0, strlen('- Installing'));
@@ -227,13 +239,13 @@ class RunComposerCommand {
     $return[$label]['numberOfRemoves'] = ((int) $restOfLine2);
   }
 
-  public function run_composer_command(): string | NULL {
+  public function run_composer_command(string $command): string | NULL {
     // Run the shell command within the DDEV environment.
     $descriptors = [
       1 => ['pipe', 'w'], // Capture standard output
       2 => ['pipe', 'w'], // Capture standard error output
     ];
-    $process = proc_open('composer update --dry-run --profile',
+    $process = proc_open($command,
       $descriptors, $pipes, '/var/www/html');
 
     if (is_resource($process)) {

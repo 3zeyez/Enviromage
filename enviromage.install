@@ -29,10 +29,10 @@ function enviromage_schema() {
 
       'avgM' => [
         'description' => 'The memory average use while running composer update',
-        'type' => 'int', // in bytes
-        'unsigned' => TRUE,
+        'type' => 'varchar', // in human file size
+        'length' => 10,
         'not null' => TRUE,
-        'default' => 0,
+        'default' => '0 Bi',
       ],
 
       'timeExec' => [
@@ -91,43 +91,15 @@ function enviromage_schema() {
         'default' => 0,
       ],
 
-      'msgIL' => [
-        'description' => 'The messages of installs of lock file operation',
+      'msgL' => [
+        'description' => 'The messages of lock file operation',
         'type' => 'blob',
         'not null' => TRUE,
         'default' => '',
       ],
 
-      'msgIP' => [
-        'description' => 'The messages of installs of package operation',
-        'type' => 'blob',
-        'not null' => TRUE,
-        'default' => '',
-      ],
-
-      'msgUL' => [
-        'description' => 'The messages of updates of lock file operation',
-        'type' => 'blob',
-        'not null' => TRUE,
-        'default' => '',
-      ],
-
-      'msgUP' => [
-        'description' => 'The messages of updates of package operation',
-        'type' => 'blob',
-        'not null' => TRUE,
-        'default' => '',
-      ],
-
-      'msgRL' => [
-        'description' => 'The messages of removes of lock file operation',
-        'type' => 'blob',
-        'not null' => TRUE,
-        'default' => '',
-      ],
-
-      'msgRP' => [
-        'description' => 'The messages of removes of package operation',
+      'msgP' => [
+        'description' => 'The messages of package operation',
         'type' => 'blob',
         'not null' => TRUE,
         'default' => '',
@@ -153,10 +125,10 @@ function enviromage_schema() {
     'fields' => [
       'id' => [
         'description' => 'The primary identifier for the record',
-        'type' => 'int',
+        'type' => 'serial',
+        'size' => 'small',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 0,
       ],
 
       'module_name' => [
@@ -174,6 +146,29 @@ function enviromage_schema() {
         'default' => 0,
       ],
     ],
+    'primary key' => ['id'],
+  ];
+
+  $schema['enviromage_command'] = [
+    'description' => 'The composer command to be run.',
+    'fields' => [
+      'id' => [
+        'description' => 'The primary identifier for the record',
+        'type' => 'serial',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+
+      'command' => [
+        'description' => 'The composer command',
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => FALSE,
+        'default' => 'composer update --dry-run --profile',
+      ],
+    ],
+
     'primary key' => ['id'],
   ];
 

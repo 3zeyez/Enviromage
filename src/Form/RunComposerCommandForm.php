@@ -53,7 +53,7 @@ class RunComposerCommandForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  protected function getEditable() {
+  protected function getEditableConfigNames() {
     return [
       'enviromage.settings',
     ];
@@ -64,16 +64,6 @@ class RunComposerCommandForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('enviromage.settings');
-
-    $command = $config->get('composer_command');
-
-    $form['message1'] = [
-      '#type' => 'markup',
-      '#markup' => "<p>Run the following command:
-                    <code>$command</code>.
-                    This command simulate a composer update without applaying it.
-                    Also, it profiles memory and time usage.</p>",
-    ];
 
     $form['customize_command'] = [
       '#type' => 'details',
@@ -108,14 +98,39 @@ class RunComposerCommandForm extends FormBase {
       '#value' => t('Customize Command'),
     ];
 
-    $form['message2'] = [
+    $database = \Drupal::database();
+    $select_query = $database->select('enviromage_command', 'c');
+    $select_query->addField('c', 'command');
+    $entries = $select_query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+
+    if ($entries === []) {
+      $command = 'composer update --dry-run --profile';
+    } else {
+      $command = $entries[count($entries) - 1]['command'];
+    }
+
+    $form['run_command'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Run your command'),
+      '#open' => TRUE,
+    ];
+
+    $form['run_command']['message1'] = [
+      '#type' => 'markup',
+      '#markup' => "<p>Run the following command:
+                    <strong>`<code>$command</code>`</strong>.</br>
+                    <em><u>This command simulate a composer update without applaying it.
+                    Also, it profiles <b>memory</b> and <b>time usage</b>.</u></em></p>",
+    ];
+
+    $form['run_command']['message2'] = [
       '#type' => 'markup',
       '#markup' => '<div id="result-message-composer"></div>',
     ];
 
-    $form['actions']['#type'] = 'actions';
+    $form['run_command']['actions']['#type'] = 'actions';
 
-    $form['actions']['run_composer'] = [
+    $form['run_command']['actions']['run_composer'] = [
       '#type' => 'button',
       '#value' => $this->t('Run Composer Command'),
       '#ajax' => [
@@ -130,11 +145,100 @@ class RunComposerCommandForm extends FormBase {
    * Submit handler for PHP benchmark AJAX.
    */
   public function runComposerCommand(array &$form, FormStateInterface $form_state): AjaxResponse {
-    $result = $this->RunComposerCommand->get_update_info_about_enabled_modules();
-    $markup = [
-      '#theme' => 'composer_command',
-      '#result' => $result,
-    ];
+    $database = \Drupal::database();
+    $select_query = $database->select('enviromage_command', 'c');
+    $select_query->addField('c', 'command');
+    $entries = $select_query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+
+    if ($entries === []) {
+      $command = 'composer update --dry-run --profile';
+    } else {
+      $command = $entries[count($entries) - 1]['command'];
+    }
+
+    $result = $this->RunComposerCommand->get_update_info_about_enabled_modules($command);
+
+    if ($result === ['Composer command could not run!']) {
+      $markup = [
+        '#theme' => 'composer_fail',
+        '#status_code' => 2
+      ];
+    } else {
+      $markup = [
+        '#theme' => 'composer_command',
+        '#result' => $result,
+      ];
+    }
+
+    try {
+      // Begin Phase 1: initiate variables to save.
+
+      // Get current user ID.
+      $uid = \Drupal::currentUser()->id();
+
+      $current_time = \Drupal::time()->getRequestTime();
+
+
+      // End Phase 1
+
+      // Begin Phase 2: save the values to the database
+
+      // Start to build a query builder object $query.
+      // https://www.drupal.org/docs/8/api/database-api/insert-queries
+      $query = \Drupal::database()->insert('enviromage_log');
+
+      // Specify the fields that the query will insert into.
+      $query->fields([
+        'uid',
+        'avgM',
+        'timeExec',
+        'nbIL',
+        'nbIP',
+        'nbUL',
+        'nbUP',
+        'nbRL',
+        'nbRP',
+        'msgL',
+        'msgP',
+        'created',
+      ]);
+
+      // Set the values of the fields we selected.
+      // Note that they must be in the same order as we defined them
+      // in the $query->fields([...]) above.
+      $query->values([
+        $uid,
+        $result['memory_avg_usage'],
+        (int) $result['time_usage'],
+        $result['lock_file_operation']['numberOfInstalls'],
+        $result['package_operation']['numberOfInstalls'],
+        $result['lock_file_operation']['numberOfUpdates'],
+        $result['package_operation']['numberOfUpdates'],
+        $result['lock_file_operation']['numberOfRemoves'],
+        $result['package_operation']['numberOfRemoves'],
+        implode('\n', $result['message']['lock_file_operation']),
+        implode('\n', $result['message']['package_operation']),
+        $current_time,
+      ]);
+
+      // Execute the query!
+      // Drupal handle the exact syntax of the query automatically!
+      $query->execute();
+      // End Phase 2
+
+      // Begin Phase 3: Display a success message
+
+      // Provide the form submitter a nice message.
+      \Drupal::messenger()->addMessage(
+        t('Your performance check was logged!')
+      );
+      // End Phase 3
+    } catch (\Exception $e) {
+      \Drupal::messenger()->addError(
+        t($e . 'Unable to log your performance check!')
+      );
+    }
+
     $response = new AjaxResponse();
     $response->addCommand(
       new HtmlCommand(
@@ -149,105 +253,53 @@ class RunComposerCommandForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // begin version constraint
+//    // begin version constraint
 
-//    $version_constraint = $form_state->getValue('version_constraint');
-//    $package = $form_state->getValue('package');
-//
-//    $versionParser = new VersionParser();
-//
-//    try {
-//      // The parseConstraints() method will throw an exception if the version constraint is invalid.
-//      $versionParser->parseConstraints($version_constraint);
-//      // If the version constraint is valid, you can proceed with your code here.
-//      // For example, you can install the package using Composer or perform other actions.
-//      \Drupal::messenger()->addMessage(t('The version constraint is valid.'));
-//      $command = "composer update $package:$version_constraint --dry-run --profile";
-//
-//    } catch (\UnexpectedValueException $e) {
-//      // Handle the case when the version constraint is invalid.
-//      // For example, display an error message or log the error.
-//      // You can also check the exception message for more details on why the constraint is invalid.
-//      $errorMessage = $e->getMessage();
-//
-//      if ($version_constraint === '') {
-//        \Drupal::messenger()->addMessage(t('No version constraint is specified'));
-//        $command = "composer update $package --dry-run --profile";
-//      } else {
-//        \Drupal::messenger()->addError(t('The version constraint is not valid.'));
-//        $command = '';
-//      }
-//
-//    }
-//
-//    $this->config('enviromage.settings')
-//      ->set('composer_command', $command)
-//      ->save();
+    $version_constraint = $form_state->getValue('version_constraint');
+    $package = $form_state->getValue('package');
 
-    // end version constraint
+    $versionParser = new VersionParser();
 
-    // begin insert into database
-
-    //    $submitted_email = $form_state->getValue('email');
-//    $this->messenger()->addMessage(t("Te form is working! You entered @entry.",
-//      ['@entry' => $submitted_email]));
     try {
-      // Begin Phase 1: initiate variables to save.
+      // The parseConstraints() method will throw an exception if the version constraint is invalid.
+      $versionParser->parseConstraints($version_constraint);
+      // If the version constraint is valid, you can proceed with your code here.
+      // For example, you can install the package using Composer or perform other actions.
+      \Drupal::messenger()->addMessage(t('The version constraint is valid.'));
+      $command = "composer update drupal/$package:$version_constraint --dry-run --profile";
 
-      // Get current user ID.
-      $uid = \Drupal::currentUser()->id();
+    } catch (\UnexpectedValueException $e) {
+      // Handle the case when the version constraint is invalid.
+      // For example, display an error message or log the error.
+      // You can also check the exception message for more details on why the constraint is invalid.
+      $errorMessage = $e->getMessage();
 
-      // Obtain values as entered into the Form.
-      $email = $form_state->getValue('email');
+      if ($package === '' && $version_constraint === ''){
+        $command = "composer update --dry-run --profile";
+      } else if ($version_constraint === '') {
+        \Drupal::messenger()->addMessage(t('No version constraint is specified'));
+        $command = "composer update drupal/$package --dry-run --profile";
+      } else {
+        \Drupal::messenger()->addError(t('The version constraint is not valid.'));
+        $command = '';
+      }
 
-      $current_time = \Drupal::time()->getRequestTime();
-      // End Phase 1
+    }
 
-      // Begin Phase 2: save the values to the database
+    \Drupal::messenger()->addMessage(t("Your customized command is : `$command`"));
 
-      // Start to build a query builder object $query.
-      // https://www.drupal.org/docs/8/api/database-api/insert-queries
-      $query = \Drupal::database()->insert('rsvplist');
-
-      // Specify the fields that the query will insert into.
-      $query->fields([
-        'uid',
-        'nid',
-        'mail',
-        'created',
-      ]);
-
-      // Set the values of the fields we selected.
-      // Note that they must be in the same order as we defined them
-      // in the $query->fields([...]) above.
-      $query->values([
-        $uid,
-        $nid,
-        $email,
-        $current_time,
-      ]);
-
-      // Execute the query!
-      // Drupal handle the exact syntax of the query automatically!
-      $query->execute();
-      // End Phase 2
-
-      // Begin Phase 3: Display a success message
-
-      // Provide the form submitter a nice message.
-      \Drupal::messenger()->addMessage(
-        t('Thank you for your RSVP, you are on the list for the event!')
-      );
-      // End Phase 3
+    try {
+      \Drupal::database()
+        ->insert('enviromage_command')
+        ->fields(['command'])
+        ->values([$command])
+        ->execute();
     } catch (\Exception $e) {
       \Drupal::messenger()->addError(
-        t('Unable to save RSVP settings at this time due to database error.
-          Please try again.')
+        t($e . 'Unable to log your customized command!')
       );
     }
 
+    // end version constraint
   }
-
-
-
 }

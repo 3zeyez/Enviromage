@@ -32,17 +32,15 @@ function enviromage_form_alter(&$form, FormStateInterface $form_state, $form_id)
  */
 function enviromage_theme($existing, $type, $theme, $path) {
   return [
-    'enviromage' => [
-      'variables' => [
-        'environment_configuration' => 'Default Value',
-        'modules_size' => '',
-        'each_module' => '',
-      ],
-    ],
-
     'composer_command' => [
       'variables' => [
         'result' => NULL,
+      ],
+    ],
+
+    'composer_fail' => [
+      'variables' => [
+        'status_code' => NULL,
       ],
     ],
 
