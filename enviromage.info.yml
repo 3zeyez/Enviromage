@@ -6,7 +6,4 @@ version: '1.0'
 core_version_requirement: ^10
 dependencies:
   - drupal:automatic_updates
-libraries:
-  - enviromage/css
-  - enviromage/js
 configure: enviromage.admin_settings
