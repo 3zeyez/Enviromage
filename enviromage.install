@@ -37,7 +37,7 @@ function enviromage_schema() {
 
       'timeExec' => [
         'description' => 'The time taken by the composer command to run in seconds',
-        'type' => 'int',
+        'type' => 'float',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,

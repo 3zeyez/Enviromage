@@ -209,7 +209,7 @@ class RunComposerCommandForm extends FormBase {
       $query->values([
         $uid,
         $result['memory_avg_usage'],
-        (int) $result['time_usage'],
+        (float) $result['time_usage'],
         $result['lock_file_operation']['numberOfInstalls'],
         $result['package_operation']['numberOfInstalls'],
         $result['lock_file_operation']['numberOfUpdates'],
