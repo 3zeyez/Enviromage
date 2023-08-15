@@ -146,7 +146,7 @@ function enviromage_schema() {
         'default' => 0,
       ],
     ],
-    'primary key' => ['id'],
+    'primary key' => ['id', 'module_name'],
   ];
 
   $schema['enviromage_command'] = [
