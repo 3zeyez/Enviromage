@@ -56,6 +56,12 @@ function enviromage_theme($existing, $type, $theme, $path) {
         'environment_configuration' => NULL,
       ],
     ],
+
+    'log_display' => [
+      'variables' => [
+        'result' => NULL,
+      ],
+    ],
   ];
 }
 

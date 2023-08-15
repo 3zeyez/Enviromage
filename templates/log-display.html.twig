@@ -1,0 +1,61 @@
+<table>
+  <thead>
+  <tr>
+    <th>Record Number</th>
+    <th>User</th>
+    <th>Average Memory Usage</th>
+    <th>Command Time Execution</th>
+    <th>Lock File Operation</th>
+    <th>Package Operation</th>
+    <th>See more fields</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for key, config in result %}
+  <tr>
+    <td>{{ config.id }}</td>
+    <td>{{ config.uid }}</td>
+    <td>{{ config.avgM }}</td>
+    <td>{{ config.timeExec }}</td>
+    <td>
+      <ul>
+        <li>{{ config.nbIL }} Install</li>
+        <li>{{ config.nbUL }} Update</li>
+        <li>{{ config.nbRL }} Remove</li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+        <li>{{ config.nbIP }} Install</li>
+        <li>{{ config.nbUP }} Update</li>
+        <li>{{ config.nbRP }} Remove</li>
+      </ul>
+    </td>
+    <td>
+      <button class="{{ config.id }}">Extend</button>
+    </td>
+  {% endfor %}
+  </tr>
+  </tbody>
+</table>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $("#1").click(function() {
+      // Send an AJAX request to your PHP script
+      $.ajax({
+        url: "run_php_code.php",
+        type: "POST",
+        success: function(response) {
+          // Handle the response if needed
+          console.log(response);
+        },
+        error: function(error) {
+          console.error(error);
+        }
+      });
+    });
+  });
+</script>

@@ -26,7 +26,7 @@ class GetModulesSizeForm extends FormBase {
   protected $renderer;
 
   /**
-   * @var \Drupal\enviromage\Controller\PhpMemoryController
+   * @var \Drupal\enviromage\GetModulesSize
    */
   protected $GetModulesSize;
 

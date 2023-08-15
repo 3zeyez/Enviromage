@@ -54,11 +54,30 @@ class EnviromageController extends ControllerBase {
     $select_query = $database->select('enviromage_command', 'c');
     $select_query->addField('c', 'command');
     $entries = $select_query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+
+    $select_query = $database->select('enviromage_log', 'log');
+    $select_query->addField('log', 'id', 'id');
+    $select_query->addField('log', 'uid', 'uid');
+    $select_query->addField('log', 'avgM', 'avg_memory');
+    $select_query->addField('log', 'timeExec', 'time_exec');
+    $select_query->addField('log', 'nbIL', 'nbil');
+    $select_query->addField('log', 'nbUL', 'nbul');
+    $select_query->addField('log', 'nbRL', 'nbrl');
+    $select_query->addField('log', 'nbIP', 'nbip');
+    $select_query->addField('log', 'nbUP', 'nbup');
+    $select_query->addField('log', 'nbRP', 'nbrp');
+    $entries = $select_query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+
     echo "<pre>"; print_r($entries); echo "</pre>";
 
-    $result = $this->composer->get_update_info_about_enabled_modules($entries[count($entries) - 1]['command']);
+    foreach ($entries[0] as $key => $value) {
+      $entries[0][$key] = (int) $value;
+    }
+    echo "<pre>"; print_r($entries); echo "</pre>";
 
-    echo "<pre>"; print_r($result); echo "</pre>";
+//    $result = $this->composer->get_update_info_about_enabled_modules($entries[count($entries) - 1]['command']);
+
+//    echo "<pre>"; print_r($result); echo "</pre>";
 //    $this->run_composer_command();
 //    $environment_configuration = $this->get_environment_configuration();
 //    $result = $this->getModulesSize();

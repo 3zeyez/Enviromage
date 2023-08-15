@@ -30,6 +30,14 @@ enviromage.get_env_conf:
   requirements:
     _permission: administer env settings
 
+enviromage.log_display:
+  path: /admin/config/development/env_config/log_display
+  defaults:
+    _form: \Drupal\enviromage\Form\LogDisplayForm
+    _title: Display Stored Data
+  requirements:
+    _permission: administer env settings
+
 enviromage.admin_settings:
   path: /admin/config/development/env_config
   defaults:

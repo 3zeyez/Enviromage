@@ -17,3 +17,8 @@ enviromage.get_env_conf:
   route_name: enviromage.get_env_conf
   base_route: enviromage.admin_settings
   title: 'Retrieve Environment Configuration'
+
+enviromage.log_display:
+  route_name: enviromage.log_display
+  base_route: enviromage.admin_settings
+  title: 'Display Previous Performance Checks'
