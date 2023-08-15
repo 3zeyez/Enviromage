@@ -88,6 +88,29 @@ class GetModulesSizeForm extends FormBase {
     $result = $this->GetModulesSize->getModulesSize();
     $modules_size = $this->utility->human_filesize($result[0]['total_size']);
     $each_module = $result[1];
+
+    try {
+      foreach ($each_module as $module_name => $memory_size) {
+        $query = \Drupal::database()->insert('enviromage_msize');
+        $query->fields([
+          'id',
+          'module_name',
+          'memory_size',
+        ]);
+        $query->values([
+          $this->utility->return_bytes($modules_size),
+          $module_name,
+          $this->utility->return_bytes($memory_size),
+        ]);
+        $query->execute();
+      }
+
+      \Drupal::messenger()->addMessage(t('Your Modules Size retrieval was logged!'));
+    } catch (\Exception $e) {
+      \Drupal::messenger()->addError(t($e . 'Sorry! We could not store this into Database!'));
+    }
+
+
     $markup = [
       '#theme' => 'modules_size',
       '#modules_size' => $modules_size,

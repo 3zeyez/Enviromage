@@ -125,8 +125,7 @@ function enviromage_schema() {
     'fields' => [
       'id' => [
         'description' => 'The primary identifier for the record',
-        'type' => 'serial',
-        'size' => 'small',
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ],

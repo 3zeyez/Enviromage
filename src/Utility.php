@@ -19,14 +19,15 @@ class Utility {
    *
    * @param string $size The human-readable size string to convert.
    *
-   * @return int The size in bytes as an integer.
+   * @return float The size in bytes as an integer.
    */
-  public function return_bytes(string $size): int {
-    $last = strtolower($size[strlen($size) - 1]);
-    $size = (int) substr($size, 0, -1);
+  public function return_bytes(string $size): float {
 
     // Check the operating system to determine the base multiplier for size conversion.
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+      $last = strtolower($size[strlen($size) - 1]);
+      $size = (float) substr($size, 0, -1);
+
       // On Windows, use binary (1024) base for size conversion.
       switch ($last) {
         case 'g':
@@ -38,6 +39,9 @@ class Utility {
       }
     }
     else {
+      $last = strtolower($size[strlen($size) - 3]);
+      $size = (float) substr($size, 0, -3);
+
       // On non-Windows systems, use decimal (1000) base for size conversion.
       switch ($last) {
         case 'g':
