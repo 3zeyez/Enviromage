@@ -209,7 +209,7 @@ class RunComposerCommandForm extends FormBase {
       $query->values([
         $uid,
         $result['memory_avg_usage'],
-        (int) $result['time_usage'],
+        (float) $result['time_usage'],
         $result['lock_file_operation']['numberOfInstalls'],
         $result['package_operation']['numberOfInstalls'],
         $result['lock_file_operation']['numberOfUpdates'],
@@ -281,23 +281,25 @@ class RunComposerCommandForm extends FormBase {
         $command = "composer update drupal/$package --dry-run --profile";
       } else {
         \Drupal::messenger()->addError(t('The version constraint is not valid.'));
-        $command = '';
       }
 
     }
 
-    \Drupal::messenger()->addMessage(t("Your customized command is : `$command`"));
 
-    try {
-      \Drupal::database()
-        ->insert('enviromage_command')
-        ->fields(['command'])
-        ->values([$command])
-        ->execute();
-    } catch (\Exception $e) {
-      \Drupal::messenger()->addError(
-        t($e . 'Unable to log your customized command!')
-      );
+    if (isset($command)) {
+      \Drupal::messenger()->addMessage(t("Your customized command is : `$command`"));
+
+      try {
+        \Drupal::database()
+          ->insert('enviromage_command')
+          ->fields(['command'])
+          ->values([$command])
+          ->execute();
+      } catch (\Exception $e) {
+        \Drupal::messenger()->addError(
+          t($e . 'Unable to log your customized command!')
+        );
+      }
     }
 
     // end version constraint
