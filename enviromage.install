@@ -106,7 +106,7 @@ function enviromage_schema() {
       ],
 
       'created' => [
-        'description' => 'Timestamp for when RSVP was created',
+        'description' => 'Timestamp for when the performance check was done',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -125,7 +125,8 @@ function enviromage_schema() {
     'fields' => [
       'id' => [
         'description' => 'The primary identifier for the record',
-        'type' => 'int',
+        'type' => 'serial',
+        'size' => 'small',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ],
@@ -144,7 +145,16 @@ function enviromage_schema() {
         'not null' => TRUE,
         'default' => 0,
       ],
+
+      'created' => [
+        'description' => 'Timestamp for when Modules Size was retrieved',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
     ],
+
     'primary key' => ['id', 'module_name'],
   ];
 

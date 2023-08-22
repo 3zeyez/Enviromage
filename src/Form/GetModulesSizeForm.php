@@ -94,12 +94,10 @@ class GetModulesSizeForm extends FormBase {
       foreach ($each_module as $module_name => $memory_size) {
         $query = \Drupal::database()->insert('enviromage_msize');
         $query->fields([
-          'id',
           'module_name',
           'memory_size',
         ]);
         $query->values([
-          $this->utility->return_bytes($modules_size),
           $module_name,
           $this->utility->return_bytes($memory_size),
         ]);
@@ -118,10 +116,17 @@ class GetModulesSizeForm extends FormBase {
       '#each_module' => $each_module,
     ];
     $response = new AjaxResponse();
+
+    try {
+      $markup = $this->renderer->render($markup);
+    } catch (\Exception) {
+      $markup = "An error has happened: Try another time!";
+    }
+
     $response->addCommand(
       new HtmlCommand(
         '#result-message-modules',
-        $this->renderer->render($markup)
+        $markup,
       )
     );
     return $response;
