@@ -230,11 +230,17 @@ class RunComposerCommandForm extends FormBase {
       );
     }
 
+    try {
+      $markup = $this->renderer->render($markup);
+    } catch (\Exception) {
+      $markup = "An error has happened: Try another time!";
+    }
+
     $response = new AjaxResponse();
     $response->addCommand(
       new HtmlCommand(
         '#result-message-composer',
-        $this->renderer->render($markup)
+        $markup,
       )
     );
     return $response;
@@ -243,7 +249,7 @@ class RunComposerCommandForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
 //    // begin version constraint
 
     $version_constraint = $form_state->getValue('version_constraint');
