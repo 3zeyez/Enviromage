@@ -125,7 +125,8 @@ function enviromage_schema() {
     'fields' => [
       'id' => [
         'description' => 'The primary identifier for the record',
-        'type' => 'int',
+        'type' => 'serial',
+        'size' => 'small',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ],
@@ -146,6 +147,29 @@ function enviromage_schema() {
       ],
     ],
     'primary key' => ['id', 'module_name'],
+  ];
+
+  $schema['enviromage_command'] = [
+    'description' => 'The composer command to be run.',
+    'fields' => [
+      'id' => [
+        'description' => 'The primary identifier for the record',
+        'type' => 'serial',
+        'size' => 'small',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+
+      'command' => [
+        'description' => 'The composer command',
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => FALSE,
+        'default' => 'composer update --dry-run --profile',
+      ],
+    ],
+
+    'primary key' => ['id'],
   ];
 
   $schema['enviromage_command'] = [

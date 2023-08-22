@@ -285,6 +285,7 @@ class RunComposerCommandForm extends FormBase {
 
     }
 
+
     if (isset($command)) {
       \Drupal::messenger()->addMessage(t("Your customized command is : `$command`"));
 

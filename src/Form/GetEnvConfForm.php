@@ -72,6 +72,7 @@ class GetEnvConfForm extends FormBase {
 
   public function getEnvConfig(): AjaxResponse{
     $result = $this->GetEnvConf->get_environment_configuration();
+    $result['var'] = gettype($this->GetEnvConf);
     $markup = [
       '#theme' => 'environment_configuration',
       '#environment_configuration' => $result,
