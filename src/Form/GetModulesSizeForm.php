@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 /**
  * @file
@@ -21,19 +21,19 @@ class GetModulesSizeForm extends FormBase {
   /**
    * The renderer service.
    *
-   * @var \Drupal\Core\Render\Renderer
+   * @var object \Drupal\Core\Render\Renderer
    */
-  protected $renderer;
+  protected object $renderer;
 
   /**
-   * @var \Drupal\enviromage\GetModulesSize
+   * @var object \Drupal\enviromage\GetModulesSize
    */
-  protected $GetModulesSize;
+  protected object $GetModulesSize;
 
   /**
-   * @var \Drupal\enviromage\Utility
+   * @var object \Drupal\enviromage\Utility
    */
-  protected $utility;
+  protected object $utility;
 
   public function __construct(
     Renderer $renderer,
@@ -45,7 +45,8 @@ class GetModulesSizeForm extends FormBase {
     $this->utility= $utility;
   }
 
-  public static function create(ContainerInterface $container) {
+  /** @noinspection PhpParamsInspection */
+  public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('renderer'),
       $container->get('enviromage.get_modules_size'),
@@ -56,14 +57,14 @@ class GetModulesSizeForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'run_functions';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
     $form['message'] = [
       '#type' => 'markup',
       '#markup' => '<p>Here you can check the memory size of your enabled

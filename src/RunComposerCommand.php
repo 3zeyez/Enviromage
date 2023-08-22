@@ -8,21 +8,21 @@ declare(strict_types=1);
 
 namespace Drupal\enviromage;
 
-use Drupal\enviromage\Utility;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class RunComposerCommand {
 
   /**
-   * @var \Drupal\enviromage\Utility
+   * @var object \Drupal\enviromage\Utility
    */
-  protected $utility;
+  protected object $utility;
 
   public function __construct(Utility $utility) {
     $this->utility = $utility;
   }
 
-  public static function create(ContainerInterface $container) {
+  /** @noinspection PhpParamsInspection */
+  public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('enviromage.utility'),
     );
@@ -65,7 +65,7 @@ class RunComposerCommand {
         $substring = substr($line, 1, $closingBracketPos - 1);
 
         $number = (float) $substring;
-        $unit = substr($substring, strlen((string) $number), 1);
+        $unit = substr($substring, strlen((string) $number), 3);
         $memory_string = $number . $unit;
         $memory = $this->utility->return_bytes($memory_string);
         $total_memory += $memory;

@@ -15,14 +15,14 @@ class EnvConfigSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'env_config_admin_settings';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getEditableConfigNames() {
+  protected function getEditableConfigNames(): array {
     return [
       'enviromage.settings',
     ];
@@ -31,7 +31,7 @@ class EnvConfigSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
     $settings = [
       'memory_limit' => 'memory_limit',
       'max_execution_time' => 'max_execution_time',
@@ -84,7 +84,8 @@ class EnvConfigSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void
+  {
     $selected_settings = array_filter($form_state->getValue('env_conf'));
 
     if (count($selected_settings) == 0) {

@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 /**
  * @file
@@ -20,21 +20,22 @@ class GetEnvConfForm extends FormBase {
   /**
    * The renderer service.
    *
-   * @var \Drupal\Core\Render\Renderer
+   * @var object \Drupal\Core\Render\Renderer
    */
-  protected $renderer;
+  protected object $renderer;
 
   /**
-   * @var \Drupal\php_memory_readiness_checker\Controller\PhpMemoryController
+   * @var object \Drupal\enviromage\GetEnvConf
    */
-  protected $GetEnvConf;
+  protected object $GetEnvConf;
 
   public function __construct(Renderer $renderer, GetEnvConf $GetEnvConf) {
     $this->renderer = $renderer;
     $this->GetEnvConf = $GetEnvConf;
   }
 
-  public static function create(ContainerInterface $container) {
+  /** @noinspection PhpParamsInspection */
+  public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('renderer'),
       $container->get('enviromage.get_env_conf'),
@@ -44,14 +45,14 @@ class GetEnvConfForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'get_env_conf';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
     $form['message'] = [
       '#type' => 'markup',
       '#markup' => '<div id="result-message-environment"></div>',
@@ -70,6 +71,7 @@ class GetEnvConfForm extends FormBase {
     return $form;
   }
 
+  /** @noinspection PhpUnused */
   public function getEnvConfig(): AjaxResponse{
     $result = $this->GetEnvConf->get_environment_configuration();
     $markup = [
@@ -77,10 +79,17 @@ class GetEnvConfForm extends FormBase {
       '#environment_configuration' => $result,
     ];
     $response = new AjaxResponse();
+
+    try {
+      $markup = $this->renderer->render($markup);
+    } catch (\Exception) {
+      $markup = "An error has happened: Try another time!";
+    }
+
     $response->addCommand(
       new HtmlCommand(
         '#result-message-environment',
-        $this->renderer->render($markup)
+        $markup,
       )
     );
     return $response;

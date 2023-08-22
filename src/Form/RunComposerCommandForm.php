@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 /**
  * @file
@@ -14,7 +14,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Renderer;
 use Drupal\enviromage\RunComposerCommand;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Composer\Semver\Semver;
 use Composer\Semver\VersionParser;
 
 class RunComposerCommandForm extends FormBase {
@@ -22,21 +21,22 @@ class RunComposerCommandForm extends FormBase {
   /**
    * The renderer service.
    *
-   * @var \Drupal\Core\Render\Renderer
+   * @var object \Drupal\Core\Render\Renderer
    */
-  protected $renderer;
+  protected object $renderer;
 
   /**
-   * @var \Drupal\enviromage\Controller\EnviromageController
+   * @var object \Drupal\enviromage\RunComposerCommand
    */
-  protected $RunComposerCommand;
+  protected object $RunComposerCommand;
 
   public function __construct(Renderer $renderer, RunComposerCommand $RunComposerCommand) {
     $this->renderer = $renderer;
     $this->RunComposerCommand = $RunComposerCommand;
   }
 
-  public static function create(ContainerInterface $container) {
+  /** @noinspection PhpParamsInspection */
+  public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('renderer'),
       $container->get('enviromage.run_composer_command'),
@@ -46,14 +46,14 @@ class RunComposerCommandForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'run_composer_command';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
     $config = $this->config('enviromage.settings');
 
     $form['customize_command'] = [
@@ -135,7 +135,7 @@ class RunComposerCommandForm extends FormBase {
   /**
    * Submit handler for PHP benchmark AJAX.
    */
-  public function runComposerCommand(array &$form, FormStateInterface $form_state): AjaxResponse {
+  public function runComposerCommand(): AjaxResponse {
     $database = \Drupal::database();
     $select_query = $database->select('enviromage_command', 'c');
     $select_query->addField('c', 'command');

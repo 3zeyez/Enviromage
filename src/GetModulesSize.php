@@ -9,22 +9,22 @@ declare(strict_types=1);
 namespace Drupal\enviromage;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\enviromage\Utility;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
 class GetModulesSize extends ControllerBase {
 
   /**
-   * @var \Drupal\enviromage\Utility
+   * @var object \Drupal\enviromage\Utility
    */
-  protected $utility;
+  protected object $utility;
 
   public function __construct(Utility $utility) {
     $this->utility = $utility;
   }
 
-  public static function create(ContainerInterface $container) {
+  /** @noinspection PhpParamsInspection */
+  public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('enviromage.utility'),
     );
